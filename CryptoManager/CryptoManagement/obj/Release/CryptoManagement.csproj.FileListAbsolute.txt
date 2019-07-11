@@ -1,0 +1,6 @@
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\bin\Release\CryptoManagement.dll
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\bin\Release\CryptoManagement.pdb
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\obj\Release\CryptoManagement.csprojAssemblyReference.cache
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\obj\Release\CryptoManagement.csproj.CoreCompileInputs.cache
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\obj\Release\CryptoManagement.dll
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement\obj\Release\CryptoManagement.pdb

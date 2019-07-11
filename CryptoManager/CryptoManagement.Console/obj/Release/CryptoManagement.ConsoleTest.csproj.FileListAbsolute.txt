@@ -1,0 +1,10 @@
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\bin\Release\CryptoManagement.Console.exe.config
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\bin\Release\CryptoManagement.Console.exe
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\bin\Release\CryptoManagement.Console.pdb
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\bin\Release\CryptoManagement.dll
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\bin\Release\CryptoManagement.pdb
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\obj\Release\CryptoManagement.ConsoleTest.csprojAssemblyReference.cache
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\obj\Release\CryptoManagement.ConsoleTest.csproj.CoreCompileInputs.cache
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\obj\Release\CryptoManagement.ConsoleTest.csproj.CopyComplete
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\obj\Release\CryptoManagement.Console.exe
+E:\Users\Gabby Peneyra\source\repos\CryptoManager\CryptoManagement.Console\obj\Release\CryptoManagement.Console.pdb
