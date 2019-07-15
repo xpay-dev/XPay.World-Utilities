@@ -57,4 +57,9 @@
 /XPW.Utilities/obj/*.props
 /XPW.Utilities/obj/*.json
 /XPW.Utilities/obj/*cache
-*.cache
+/XPW.Utilities/bin/Debug/*.pdb
+/XPW.Utilities/bin/Debug/*.dll
+/XPW.Utilities/obj/Debug/*.cache
+/XPW.Utilities/obj/Debug/*.dll
+/XPW.Utilities/obj/Debug/*.CopyComplete
+/XPW.Utilities/obj/Debug/XPW.Utilities.pdb
