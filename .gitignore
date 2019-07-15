@@ -43,3 +43,5 @@
 /XPW.Utilities/[B][b]in/[D][d]ebug/*.*
 /XPW.Utilities/[O][o]bj/[R][r]eleased/*.*
 /XPW.Utilities/[B][b]in/[R][r]eleased/*.*
+*.txt
+*.suo
