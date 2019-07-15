@@ -8,3 +8,7 @@
 *.ide-wal
 */[O][o]bj/
 */[B][b]in/
+*/[O][o]bj/[D][d]ebug
+*/[B][b]in/[D][d]ebug
+*/[O][o]bj/[R][r]eleased
+*/[B][b]in/[R][r]eleased
