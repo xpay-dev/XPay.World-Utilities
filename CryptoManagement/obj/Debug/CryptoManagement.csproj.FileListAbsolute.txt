@@ -1,0 +1,6 @@
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\bin\Debug\CryptoManagement.dll
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\bin\Debug\CryptoManagement.pdb
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\obj\Debug\CryptoManagement.csprojAssemblyReference.cache
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\obj\Debug\CryptoManagement.csproj.CoreCompileInputs.cache
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\obj\Debug\CryptoManagement.dll
+E:\Users\Gabby Peneyra\source\repos\xPayUtility\CryptoManagement\obj\Debug\CryptoManagement.pdb
