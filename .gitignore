@@ -49,3 +49,12 @@
 /CryptoManagement/obj/Debug/CryptoManagement.csproj.CoreCompileInputs.cache
 /XPW.Utilities/obj/Debug/XPW.Utilities.csprojAssemblyReference.cache
 /XPW.Utilities/obj/Debug/XPW.Utilities.csproj.CoreCompileInputs.cache
+/CryptoManagement/obj/Debug/*.pdb
+/CryptoManagement/obj/Debug/*.dll
+/CryptoManagement/bin/Debug/*.pdb
+/CryptoManagement/bin/Debug/*.dll
+/XPW.Utilities/obj/*.targets
+/XPW.Utilities/obj/*.props
+/XPW.Utilities/obj/*.json
+/XPW.Utilities/obj/*cache
+*.cache
