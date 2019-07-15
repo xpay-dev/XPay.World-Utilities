@@ -51,6 +51,27 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
         }
+      },
+      "RefactorThis.GraphDiff/3.0.2": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.1"
+        },
+        "compile": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        }
+      },
+      "CryptoManagement/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        }
       }
     },
     ".NETFramework,Version=v4.5/win": {
@@ -102,6 +123,27 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "RefactorThis.GraphDiff/3.0.2": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.1"
+        },
+        "compile": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        }
+      },
+      "CryptoManagement/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CryptoManagement.dll": {}
         }
       }
     },
@@ -155,6 +197,27 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
         }
+      },
+      "RefactorThis.GraphDiff/3.0.2": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.1"
+        },
+        "compile": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        }
+      },
+      "CryptoManagement/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        }
       }
     },
     ".NETFramework,Version=v4.5/win-x86": {
@@ -206,6 +269,27 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "RefactorThis.GraphDiff/3.0.2": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.1"
+        },
+        "compile": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RefactorThis.GraphDiff.dll": {}
+        }
+      },
+      "CryptoManagement/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/CryptoManagement.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CryptoManagement.dll": {}
         }
       }
     }
@@ -301,13 +385,34 @@
         "newtonsoft.json.12.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
       ]
+    },
+    "RefactorThis.GraphDiff/3.0.2": {
+      "sha512": "nas5xEeNnAjboTlqsumvRjt1u047P26rz/vMjximn5wvvYY3/CaWS8e1c24zZq2g1+TjYS0V0UWQOWbbhakfTg==",
+      "type": "package",
+      "path": "refactorthis.graphdiff/3.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/RefactorThis.GraphDiff.dll",
+        "lib/net40/RefactorThis.GraphDiff.pdb",
+        "lib/net40/RefactorThis.GraphDiff.xml",
+        "refactorthis.graphdiff.3.0.2.nupkg.sha512",
+        "refactorthis.graphdiff.nuspec"
+      ]
+    },
+    "CryptoManagement/1.0.0": {
+      "type": "project",
+      "path": "../CryptoManagement/CryptoManagement.csproj",
+      "msbuildProject": "../CryptoManagement/CryptoManagement.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.5": [
+      "CryptoManagement >= 1.0.0",
       "EntityFramework >= 6.2.0",
       "Microsoft.AspNet.WebApi.Core >= 5.2.7",
-      "Newtonsoft.Json >= 12.0.2"
+      "Newtonsoft.Json >= 12.0.2",
+      "RefactorThis.GraphDiff >= 3.0.2"
     ]
   },
   "packageFolders": {
@@ -316,11 +421,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj",
+      "projectUniqueName": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj",
       "projectName": "XPW.Utilities",
-      "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj",
+      "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj",
       "packagesPath": "C:\\Users\\Gabby Peneyra\\.nuget\\packages\\",
-      "outputPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\obj\\",
+      "outputPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "configFilePaths": [
@@ -336,7 +441,11 @@
       },
       "frameworks": {
         "net45": {
-          "projectReferences": {}
+          "projectReferences": {
+            "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj": {
+              "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj"
+            }
+          }
         }
       }
     },
@@ -354,6 +463,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[12.0.2, )"
+          },
+          "RefactorThis.GraphDiff": {
+            "target": "Package",
+            "version": "[3.0.2, )"
           }
         }
       }

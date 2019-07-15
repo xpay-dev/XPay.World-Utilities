@@ -1,17 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj": {}
+    "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj": {}
   },
   "projects": {
-    "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj": {
+    "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj",
+        "projectUniqueName": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj",
+        "projectName": "CryptoManagement",
+        "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj"
+      },
+      "frameworks": {
+        "net45": {}
+      }
+    },
+    "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj",
         "projectName": "XPW.Utilities",
-        "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\XPW.Utilities.csproj",
+        "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\XPW.Utilities.csproj",
         "packagesPath": "C:\\Users\\Gabby Peneyra\\.nuget\\packages\\",
-        "outputPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\Xpay.Web\\XPW.Utilities\\obj\\",
+        "outputPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\XPW.Utilities\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
@@ -27,7 +38,11 @@
         },
         "frameworks": {
           "net45": {
-            "projectReferences": {}
+            "projectReferences": {
+              "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj": {
+                "projectPath": "E:\\Users\\Gabby Peneyra\\source\\repos\\xPayUtility\\CryptoManagement\\CryptoManagement.csproj"
+              }
+            }
           }
         }
       },
@@ -45,6 +60,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.2, )"
+            },
+            "RefactorThis.GraphDiff": {
+              "target": "Package",
+              "version": "[3.0.2, )"
             }
           }
         }
