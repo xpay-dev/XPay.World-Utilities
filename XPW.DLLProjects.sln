@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoManagement", "CryptoManagement\CryptoManagement.csproj", "{132AC1E1-ECE6-474F-A5CF-5D75B239484B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPW.Utilities", "XPW.Utilities\XPW.Utilities.csproj", "{CA502DC3-7D62-4FD2-8705-55DED1AF733F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{132AC1E1-ECE6-474F-A5CF-5D75B239484B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{132AC1E1-ECE6-474F-A5CF-5D75B239484B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{132AC1E1-ECE6-474F-A5CF-5D75B239484B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{132AC1E1-ECE6-474F-A5CF-5D75B239484B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA502DC3-7D62-4FD2-8705-55DED1AF733F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA502DC3-7D62-4FD2-8705-55DED1AF733F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA502DC3-7D62-4FD2-8705-55DED1AF733F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA502DC3-7D62-4FD2-8705-55DED1AF733F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D5ECCBE-E393-4CCD-84D5-C14200B7360E}
+	EndGlobalSection
+EndGlobal
