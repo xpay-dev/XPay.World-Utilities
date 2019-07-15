@@ -45,3 +45,7 @@
 /XPW.Utilities/[B][b]in/[R][r]eleased/*.*
 *.txt
 *.suo
+/CryptoManagement/obj/Debug/CryptoManagement.csprojAssemblyReference.cache
+/CryptoManagement/obj/Debug/CryptoManagement.csproj.CoreCompileInputs.cache
+/XPW.Utilities/obj/Debug/XPW.Utilities.csprojAssemblyReference.cache
+/XPW.Utilities/obj/Debug/XPW.Utilities.csproj.CoreCompileInputs.cache
