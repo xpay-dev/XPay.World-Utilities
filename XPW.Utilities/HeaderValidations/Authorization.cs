@@ -16,7 +16,7 @@ using XPW.Utilities.UtilityModels;
 namespace XPW.Utilities.HeaderValidations {
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class Authorization : AuthorizationFilterAttribute {
-          internal static readonly AppConfigManagement.AppConfig appConfigManager = new AppConfigManagement.AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
+          internal static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
           internal bool? Active = appConfigManager.AppSetting<bool>("RequiredAuthorization");
           public Authorization() { }
           public Authorization(bool active) {
@@ -89,7 +89,7 @@ namespace XPW.Utilities.HeaderValidations {
           public class AuthenticationBase64Filter : Authorization {
                public AuthenticationBase64Filter() { }
                public AuthenticationBase64Filter(bool active) : base(active) { }
-               internal new static readonly AppConfigManagement.AppConfig appConfigManager = new AppConfigManagement.AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
+               internal new static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
                private static string authUsername = appConfigManager.AppSetting<string>("APIAuthorizationUsername");
                private static string authPassword = appConfigManager.AppSetting<string>("APIAuthorizationPassword");
 

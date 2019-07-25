@@ -6,7 +6,9 @@
      public enum APIRequestMethod {
           None,
           Post,
-          Get
+          Get,
+          Put,
+          Delete
      }
      public enum CodeStatus {
           Success = 200,
@@ -17,5 +19,9 @@
           Invalid = 505,
           DBError = 506,
           InvalidInput = 507
+     }
+     public enum AccountSource {
+          Admin,
+          Others
      }
 }

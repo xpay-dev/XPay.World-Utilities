@@ -32,6 +32,14 @@ namespace XPW.Utilities.APICallManagement {
                               using (var response = await httpClient.GetAsync(request.Path)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
+                         } else if (APICallMethod == APIRequestMethod.Put) {
+                              using (var response = await httpClient.PutAsync(request.Path, content)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Delete) {
+                              using (var response = await httpClient.DeleteAsync(request.Path)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
                          } else { responseData = "Invalid Request Method"; }
                          if (responseData == "Unauthorized") {
                               throw new UnauthorizedAccessException("Unauthorized access");
@@ -64,6 +72,14 @@ namespace XPW.Utilities.APICallManagement {
                               }
                          } else if (APICallMethod == APIRequestMethod.Get) {
                               using (var response = await httpClient.GetAsync(request.Path)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Put) {
+                              using (var response = await httpClient.PutAsync(request.Path,content)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Delete) {
+                              using (var response = await httpClient.DeleteAsync(request.Path)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
                          } else { responseData = "Invalid Request Method"; }
@@ -100,6 +116,14 @@ namespace XPW.Utilities.APICallManagement {
                               using (var response = await httpClient.GetAsync(request.Path)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
+                         } else if (APICallMethod == APIRequestMethod.Put) {
+                              using (var response = await httpClient.PutAsync(request.Path, content)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Delete) {
+                              using (var response = await httpClient.DeleteAsync(request.Path)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
                          } else { responseData = "Invalid Request Method"; }
                          if (responseData == "Unauthorized") {
                               throw new UnauthorizedAccessException("Unauthorized access");
@@ -130,6 +154,14 @@ namespace XPW.Utilities.APICallManagement {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
                          } else if (APICallMethod == APIRequestMethod.Get) {
+                              using (var response = await httpClient.GetAsync(request.Path)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Put) {
+                              using (var response = await httpClient.PutAsync(request.Path, content)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Delete) {
                               using (var response = await httpClient.GetAsync(request.Path)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
@@ -203,6 +235,14 @@ namespace XPW.Utilities.APICallManagement {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
                          } else if (APICallMethod == APIRequestMethod.Get) {
+                              using (var response = await httpClient.GetAsync(request.Path)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Put) {
+                              using (var response = await httpClient.PutAsync(request.Path, content)) {
+                                   responseData = await response.Content.ReadAsStringAsync();
+                              }
+                         } else if (APICallMethod == APIRequestMethod.Delete) {
                               using (var response = await httpClient.GetAsync(request.Path)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
