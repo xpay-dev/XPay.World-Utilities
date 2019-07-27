@@ -31,10 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RefactorThis.GraphDiff">
-      <HintPath>..\packages\RefactorThis.GraphDiff.3.0.2\lib\net40\RefactorThis.GraphDiff.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -50,6 +48,8 @@
     <Compile Include="BaseContextManagement\BaseModels.cs" />
     <Compile Include="BaseContextManagement\BaseRepository.cs" />
     <Compile Include="BaseContextManagement\BaseService.cs" />
+    <Compile Include="BaseContextManagement\BaseServiceController.cs" />
+    <Compile Include="BaseContextManagement\BaseWebApiConfig.cs" />
     <Compile Include="CryptoHashingManagement\CardHashiingManagement.cs" />
     <Compile Include="CryptoHashingManagement\HashUtilityManagement.cs" />
     <Compile Include="DatabaseValidation\DatabaseConnectionValidation.cs" />

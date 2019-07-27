@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 namespace XPW.Utilities.BaseContext {
-     public class BaseService<T> : IDisposable where T : class, new() {
+     public abstract class BaseService<T> : IDisposable where T : class, new() {
           T _repository;
           protected T Repository() {
                if (_repository == null) {
@@ -30,106 +30,172 @@ namespace XPW.Utilities.BaseContext {
                     return _Repository;
                }
           }
-          private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(15);
 
           public virtual void Save(T entity) {
-               if (entity == null)
-                    throw new ArgumentNullException("entity");
+               try {
+                    if (entity == null)
+                         throw new ArgumentNullException("entity");
 
-               Repository.Add(entity);
-               Repository.Save();
+                    Repository.Add(entity);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Save(IEnumerable<T> entities) {
-               if (entities == null)
-                    throw new ArgumentNullException("entities");
+               try {
+                    if (entities == null)
+                         throw new ArgumentNullException("entities");
 
-               Repository.Add(entities);
-               Repository.Save();
+                    Repository.Add(entities);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Update(T entity) {
-               if (entity == null)
-                    throw new ArgumentNullException("entity");
+               try {
+                    if (entity == null)
+                         throw new ArgumentNullException("entity");
 
-               Repository.Edit(entity);
-               Repository.Save();
+                    Repository.Edit(entity);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Update(IEnumerable<T> entity) {
-               if (entity == null)
-                    throw new ArgumentNullException("entity");
+               try {
+                    if (entity == null)
+                         throw new ArgumentNullException("entity");
 
-               Repository.Edit(entity);
-               Repository.Save();
+                    Repository.Edit(entity);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Delete(Guid id) {
-               Repository.Delete(id);
-               Repository.Save();
+               try {
+                    Repository.Delete(id);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Delete(IEnumerable<Guid> ids) {
-               foreach (var id in ids)
-                    Repository.Delete(id);
-               Repository.Save();
+               try {
+                    foreach (var id in ids)
+                         Repository.Delete(id);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual T Get(Guid id) {
-               return Repository.Find(id);
+               try {
+                    return Repository.Find(id);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual T Get(int id) {
-               return Repository.Find(id);
+               try {
+                    return Repository.Find(id);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual T Get(Expression<Func<T, bool>> where) {
-               return Repository.All()
+               try {
+                    return Repository.All()
                                .Where(where)
                                .FirstOrDefault();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual IEnumerable<T> GetAllBy(Expression<Func<T, bool>> where) {
-               return Repository.All()
+               try {
+                    return Repository.All()
                                 .Where(where);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual IEnumerable<T> GetAll() {
-               return Repository.All();
+               try {
+                    return Repository.All();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual bool Check(int id) {
-               var entity = Repository.Find(id);
-               if (entity != null)
-                    return true;
-               else
-                    return false;
+               try {
+                    var entity = Repository.Find(id);
+                    if (entity != null)
+                         return true;
+                    else
+                         return false;
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual bool Check(Guid id) {
-               var entity = Repository.Find(id);
-               if (entity != null)
-                    return true;
-               else
-                    return false;
+               try {
+                    var entity = Repository.Find(id);
+                    if (entity != null)
+                         return true;
+                    else
+                         return false;
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual bool Check(Expression<Func<T, bool>> where) {
-               return Repository.All().Any(where);
+               try {
+                    return Repository.All().Any(where);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual void Dispose() {
-               Repository.Dispose();
+               try {
+                    Repository.Dispose();
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual List<T> StoredProcedureList(string storedProcName, List<StoredProcedureParam> parameters) {
-               return Repository.StoredProcedureList(storedProcName, parameters);
+               try {
+                    return Repository.StoredProcedureList(storedProcName, parameters);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
 
           public virtual T StoredProcedure(string storedProcName, List<StoredProcedureParam> parameters) {
-               return Repository.StoredProcedure(storedProcName, parameters);
+               try {
+                    return Repository.StoredProcedure(storedProcName, parameters);
+               } catch (Exception ex) {
+                    throw ex;
+               }
           }
-
           #endregion
      }
 }

@@ -19,8 +19,8 @@ namespace XPW.Utilities.CryptoHashingManagement {
                     CryptoProvider crypto = new CryptoProvider(Key, IV);
                     value = crypto.Decrypt(value.Trim());
                     return value;
-               } catch (Exception ex) {
-                    throw ex;
+               } catch {
+                    throw new Exception("Invalid encryption reference, cannot be decrypt");
                }
           }
      }
