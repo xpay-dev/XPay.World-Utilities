@@ -42,6 +42,19 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
+          
+          public virtual T SaveReturn(T entity) {
+               try {
+                    if (entity == null)
+                         throw new ArgumentNullException("entity");
+
+                    entity = Repository.AddReturn(entity);
+                    Repository.Save();
+                    return entity;
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
 
           public virtual void Save(IEnumerable<T> entities) {
                try {
@@ -50,6 +63,19 @@ namespace XPW.Utilities.BaseContext {
 
                     Repository.Add(entities);
                     Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+
+          public virtual IEnumerable<T> SaveReturn(IEnumerable<T> entities) {
+               try {
+                    if (entities == null)
+                         throw new ArgumentNullException("entities");
+
+                    entities = Repository.AddReturn(entities);
+                    Repository.Save();
+                    return entities;
                } catch (Exception ex) {
                     throw ex;
                }
@@ -67,6 +93,19 @@ namespace XPW.Utilities.BaseContext {
                }
           }
 
+          public virtual T UpdateReturn(T entity) {
+               try {
+                    if (entity == null)
+                         throw new ArgumentNullException("entity");
+
+                    entity = Repository.EditReturn(entity);
+                    Repository.Save();
+                    return entity;
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+
           public virtual void Update(IEnumerable<T> entity) {
                try {
                     if (entity == null)
@@ -74,6 +113,19 @@ namespace XPW.Utilities.BaseContext {
 
                     Repository.Edit(entity);
                     Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+
+          public virtual IEnumerable<T> UpdateReturn(IEnumerable<T> entities) {
+               try {
+                    if (entities == null)
+                         throw new ArgumentNullException("entity");
+
+                    entities = Repository.EditReturn(entities);
+                    Repository.Save();
+                    return entities;
                } catch (Exception ex) {
                     throw ex;
                }

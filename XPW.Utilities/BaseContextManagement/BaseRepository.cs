@@ -297,8 +297,8 @@ namespace XPW.Utilities.BaseContext {
                try {
                     Task task = Task.Run(() => {
                          T t = Context.Set<T>().Find(new object[] {
-                        id
-                    });
+                              id
+                         });
                          Context.Set<T>().Remove(t);
                          trans.Commit();
                     });
@@ -316,8 +316,8 @@ namespace XPW.Utilities.BaseContext {
                try {
                     Task task = Task.Run(() => {
                          T t = Context.Set<T>().Find(new object[] {
-                        id
-                    });
+                              id
+                         });
                          Context.Set<T>().Remove(t);
                          trans.Commit();
                     });
@@ -346,11 +346,11 @@ namespace XPW.Utilities.BaseContext {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
                try {
                     Task task = Task.Run(() => {
-                         Context.SaveChanges();
-                         Context.SaveChangesAsync();
-                    });
-                    if (!task.Wait(TimeSpan)) {
-                         throw new Exception("Connecting to database was taking to long, please try again later");
+                              Context.SaveChanges();
+                              Context.SaveChangesAsync();
+                         });
+                         if (!task.Wait(TimeSpan)) {
+                              throw new Exception("Connecting to database was taking to long, please try again later");
                     }
                } catch (Exception ex) {
                     trans.Rollback();
