@@ -150,6 +150,25 @@ namespace XPW.Utilities.BaseContext {
                }
           }
 
+          public virtual void Delete(int id) {
+               try {
+                    Repository.Delete(id);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+
+          public virtual void Delete(IEnumerable<int> ids) {
+               try {
+                    foreach (var id in ids)
+                         Repository.Delete(id);
+                    Repository.Save();
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+
           public virtual T Get(Guid id) {
                try {
                     return Repository.Find(id);
