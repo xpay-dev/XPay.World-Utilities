@@ -14,7 +14,6 @@ namespace XPW.Utilities.BaseContext {
         where T : class, new() {
           public C Context { get; set; } = Activator.CreateInstance<C>();
           private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(15);
-
           public BaseRepository() {
                try {
                     if (!Context.Database.Exists()) {
@@ -24,7 +23,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual IQueryable<T> All() {
                try {
                     IQueryable<T> queryable = Context.Set<T>();
@@ -39,7 +37,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties) {
                try {
                     IQueryable<T> queryable = Context.Set<T>();
@@ -57,7 +54,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual T Find(int id) {
                try {
                     T entityObject = new T();
@@ -74,7 +70,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual T Find(Guid id) {
                try {
                     T entityObject = new T();
@@ -91,7 +86,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Add(T entity) {
                try {
                     Task task = Task.Run(() => {
@@ -104,7 +98,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Add(IEnumerable<T> entities) {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
@@ -119,7 +112,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Edit(T entity) {
                try {
                     Task task = Task.Run(() => {
@@ -136,7 +128,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Edit(IEnumerable<T> entities) {
                try {
                     Task task = Task.Run(() => {
@@ -155,7 +146,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Edit(T entity, Expression<Func<IUpdateConfiguration<T>, object>> mapping) {
                try {
                     Task task = Task.Run(() => {
@@ -168,7 +158,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Edit(IEnumerable<T> entities, Expression<Func<IUpdateConfiguration<T>, object>> mapping) {
                try {
                     Task task = Task.Run(() => {
@@ -182,7 +171,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual T AddReturn(T entity) {
                try {
                     T entityObject = new T();
@@ -197,7 +185,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual List<T> AddReturn(IEnumerable<T> entities) {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
@@ -215,7 +202,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual T EditReturn(T entity) {
                try {
                     T entityObject = new T();
@@ -235,7 +221,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual List<T> EditReturn(IEnumerable<T> entities) {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
@@ -258,7 +243,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual T EditReturn(T entity, Expression<Func<IUpdateConfiguration<T>, object>> mapping) {
                try {
                     T entityObject = new T();
@@ -273,7 +257,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual List<T> EditReturn(IEnumerable<T> entities, Expression<Func<IUpdateConfiguration<T>, object>> mapping) {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
@@ -291,7 +274,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Delete(int id) {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
                try {
@@ -310,7 +292,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Delete(Guid id) {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
                try {
@@ -329,7 +310,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Save() {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
                try {
@@ -340,7 +320,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
           public virtual async Task SaveAsync() {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
@@ -357,11 +336,9 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual void Dispose() {
                Context.Dispose();
           }
-
           public virtual T StoredProcedure(string storedProcName, List<StoredProcedureParam> parameters) {
                try {
                     T result = new T();
@@ -382,7 +359,6 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-
           public virtual List<T> StoredProcedureList(string storedProcName, List<StoredProcedureParam> parameters) {
                try {
                     List<T> results = new List<T>();
@@ -403,48 +379,62 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
+          public virtual T StoredProcedure(string storedProcName) {
+               try {
+                    T result = new T();
+                    Task task = Task.Run(() => {
+                         string sqlCommand = string.Format("exec {0}", storedProcName);
+                         result = Context.Database.SqlQuery<T>(sqlCommand).ToList().FirstOrDefault();
+                    });
+                    if (!task.Wait(TimeSpan)) {
+                         throw new Exception("Connecting to database was taking to long, please try again later");
+                    }
+                    return result;
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+          public virtual List<T> StoredProcedureList(string storedProcName) {
+               try {
+                    List<T> results = new List<T>();
+                    Task task = Task.Run(() => {
+                         string sqlCommand = string.Format("exec {0}", storedProcName);
+                         results = Context.Database.SqlQuery<T>(sqlCommand).ToList();
+                    });
+                    if (!task.Wait(TimeSpan)) {
+                         throw new Exception("Connecting to database was taking to long, please try again later");
+                    }
+                    return results;
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
      }
 
      public interface IBaseRepository<T> : IDisposable where T : class {
           IQueryable<T> All();
-
           IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
-
           T Find(int id);
-
           T Find(Guid id);
-
           void Add(T entity);
-
           void Add(IEnumerable<T> entity);
-
           void Edit(T entity);
-
           void Edit(IEnumerable<T> entity);
-
           T AddReturn(T entity);
-
           List<T> AddReturn(IEnumerable<T> entity);
-
           T EditReturn(T entity);
-
           List<T> EditReturn(IEnumerable<T> entity);
-
           void Delete(int id);
-
           void Delete(Guid id);
-
           void Save();
-
           Task SaveAsync();
-
           #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
           void Dispose();
 #         pragma warning restore CS0108 // Member hides inherited member; missing new keyword
-
           T StoredProcedure(string storedProcName, List<StoredProcedureParam> param);
-
           List<T> StoredProcedureList(string storedProcName, List<StoredProcedureParam> param);
+          T StoredProcedure(string storedProcName);
+          List<T> StoredProcedureList(string storedProcName);
      }
 
      public class StoredProcedureParam {

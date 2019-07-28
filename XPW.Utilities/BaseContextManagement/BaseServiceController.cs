@@ -11,13 +11,17 @@ using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContextManagement {
      public abstract class BaseServiceController<S> : ApiController, IDisposable where S : class, new() {
-          private S Service = Activator.CreateInstance<S>();
+          private S BaseService = Activator.CreateInstance<S>();
+          public new virtual void Dispose() => base.Dispose();
+     }
+     public abstract class BaseController : ApiController, IDisposable {
+          public new virtual void Dispose() => base.Dispose();
      }
      public abstract class BaseServiceController<E, C> : ApiController, IDisposable where E : class, new() where C : DbContext, new() {
           internal class BaseRepo : BaseRepository<C, E>, IBaseRepo { }
           internal interface IBaseRepo : IBaseRepository<E> { }
           internal class BaseServices : BaseService<E, BaseRepo> { }
-          private BaseServices Service = new BaseServices();
+          private BaseServices BaseService = new BaseServices();
           internal string errorMessage = string.Empty;
           internal List<string> errorDetails = new List<string>();
           internal static readonly string key = ConfigurationManager.AppSettings["DefaultKey"].ToString();
@@ -28,7 +32,7 @@ namespace XPW.Utilities.BaseContextManagement {
                return await Task.Run(() => {
                     var data = new List<E>();
                     try {
-                         data = Service.GetAll().ToList();
+                         data = BaseService.GetAll().ToList();
                     } catch (Exception ex) {
                          errorMessage = ex.Message;
                          errorDetails.Add(ex.Message);
@@ -58,9 +62,9 @@ namespace XPW.Utilities.BaseContextManagement {
                          var isGuid     = Guid.TryParse(id, out guidId);
                          var isNumeric  = int.TryParse(id, out intId);
                          if (isGuid) {
-                              data = Service.Get(guidId);
+                              data = BaseService.Get(guidId);
                          } else if (isNumeric) {
-                              data = Service.Get(intId);
+                              data = BaseService.Get(intId);
                          } else {
                               throw new Exception("Invalid data reference");
                          }
@@ -93,17 +97,17 @@ namespace XPW.Utilities.BaseContextManagement {
                          var isGuid = Guid.TryParse(id, out guidId);
                          var isNumeric = int.TryParse(id, out intId);
                          if (isGuid) {
-                              data = Service.Get(guidId);
+                              data = BaseService.Get(guidId);
                               if (data == null) {
                                    throw new Exception("Invalid data reference");
                               }
-                              Service.Delete(guidId);
+                              BaseService.Delete(guidId);
                          } else if (isNumeric) {
-                              data = Service.Get(intId);
+                              data = BaseService.Get(intId);
                               if (data == null) {
                                    throw new Exception("Invalid data reference");
                               }
-                              Service.Delete(intId);
+                              BaseService.Delete(intId);
                          } else {
                               throw new Exception("Invalid data reference");
                          }
@@ -123,5 +127,6 @@ namespace XPW.Utilities.BaseContextManagement {
                     };
                });
           }
+          public new virtual void Dispose() => base.Dispose();
      }
 }
