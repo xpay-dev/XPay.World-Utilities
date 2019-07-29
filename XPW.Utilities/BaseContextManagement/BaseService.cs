@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -20,6 +21,7 @@ namespace XPW.Utilities.BaseContext {
      }
 
      public abstract class BaseService<T, TR> where TR : IBaseRepository<T>, new() where T : class, new() {
+          public static readonly bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"].ToString());
           #region Repository
           private TR _Repository;
           protected TR Repository {

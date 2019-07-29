@@ -24,4 +24,10 @@
           Admin,
           Others
      }
+
+     public enum RevisionType {
+          Create,
+          Update,
+          Delete
+     }
 }

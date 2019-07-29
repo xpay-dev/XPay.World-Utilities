@@ -63,6 +63,7 @@
     <Compile Include="HeaderValidations\Authorization.cs" />
     <Compile Include="HTTPSChecker\HTTPSValidation.cs" />
     <Compile Include="IPWhiteListing\IPAuthorization.cs" />
+    <Compile Include="Logs\RevisionLogs.cs" />
     <Compile Include="NoSQL\Reader.cs" />
     <Compile Include="NoSQL\Writer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="UtilityModels\GenericResponseModel.cs" />
     <Compile Include="UtilityModels\GoogleRecaptchaModel.cs" />
     <Compile Include="UtilityModels\IPWhiteListingModel.cs" />
+    <Compile Include="UtilityModels\RevisionLog.cs" />
     <Compile Include="UtilityModels\WhiteLabelingManagementModel.cs" />
     <Compile Include="WhiteLabelingManagement\CssWriter.cs" />
   </ItemGroup>
