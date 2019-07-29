@@ -7,36 +7,40 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using XPW.Utilities.BaseContext;
 using XPW.Utilities.CryptoHashingManagement;
+using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContextManagement {
-     public abstract class BaseServiceController<S> : ApiController, IDisposable where S : class, new() {
+     public abstract class BaseServiceController<S> : ApiController, IDisposable 
+          where S : class, new() {
           private S BaseService = Activator.CreateInstance<S>();
           public new virtual void Dispose()       => base.Dispose();
-          public static readonly string key     = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv      = ConfigurationManager.AppSettings["DefaultIV"].ToString();
-          public HashUtilityManagement crypto   = new HashUtilityManagement(key, iv);
-          public string ErrorMessage            = string.Empty;
-          public List<string> ErrorDetails      = new List<string>();
+          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
+          public string ErrorMessage              = string.Empty;
+          public List<string> ErrorDetails        = new List<string>();
      }
-     public abstract class BaseController : ApiController, IDisposable {
+     public abstract class BaseServiceController : ApiController, IDisposable {
           public new virtual void Dispose()       => base.Dispose();
-          public static readonly string key     = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv      = ConfigurationManager.AppSettings["DefaultIV"].ToString();
-          public HashUtilityManagement crypto   = new HashUtilityManagement(key, iv);
-          public string ErrorMessage            = string.Empty;
-          public List<string> ErrorDetails      = new List<string>();
+          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
+          public string ErrorMessage              = string.Empty;
+          public List<string> ErrorDetails        = new List<string>();
      }
-     public abstract class BaseServiceController<E, C> : ApiController, IDisposable where E : class, new() where C : DbContext, new() {
-          public class BaseRepo : BaseRepository<C, E>, IBaseRepo { }
-          internal interface IBaseRepo : IBaseRepository<E> { }
-          public class BaseServices : BaseService<E, BaseRepo> { }
-          public BaseServices Service = new BaseServices();
-          public HashUtilityManagement crypto   = new HashUtilityManagement(key, iv);
-          public string ErrorMessage            = string.Empty;
-          public List<string> ErrorDetails      = new List<string>();
-          public static readonly string key     = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv      = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+     public abstract class BaseServiceController<E, C> : ApiController, IDisposable 
+          where E : class, new() 
+          where C : DbContext, new() {
+          public class BaseRepo         : BaseRepository<C, E>, IBaseRepo { }
+          internal interface IBaseRepo  : IBaseRepository<E> { }
+          public class BaseServices     : BaseService<E, BaseRepo> { }
+          public BaseServices Service             = new BaseServices();
+          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
+          public string ErrorMessage              = string.Empty;
+          public List<string> ErrorDetails        = new List<string>();
+          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
           [Route("get-all")]
           [HttpGet]
           public virtual async Task<GenericResponseListModel<E>> GetAll() {
@@ -62,7 +66,7 @@ namespace XPW.Utilities.BaseContextManagement {
           }
           [Route("get/{id}")]
           [HttpGet]
-          public virtual async Task<GenericResponseModel<E>> Get(string id) {
+          public virtual async Task<GenericResponseModel<E>> Get([FromUrl]string id) {
                return await Task.Run(() => {
                     var data = new E();
                     try {
@@ -96,7 +100,7 @@ namespace XPW.Utilities.BaseContextManagement {
           }
           [Route("delete/{id}")]
           [HttpDelete]
-          public virtual async Task<GenericResponseModel<E>> Delete(string id) {
+          public virtual async Task<GenericResponseModel<E>> Delete([FromUrl]string id) {
                return await Task.Run(() => {
                     var data = new E();
                     try {
@@ -108,8 +112,8 @@ namespace XPW.Utilities.BaseContextManagement {
                          var isNumeric = int.TryParse(id, out intId);
                          if (isGuid) {
                               data = Service.Get(guidId);
-                              if (data == null) {
-                                   throw new Exception("Invalid data reference");
+                                   if (data == null) {
+                                        throw new Exception("Invalid data reference");
                               }
                               Service.Delete(guidId);
                          } else if (isNumeric) {
@@ -121,6 +125,14 @@ namespace XPW.Utilities.BaseContextManagement {
                          } else {
                               throw new Exception("Invalid data reference");
                          }
+                         List<RevisionLog<E>> revisions = RevisionLogs<E>.Read(new C().GetType().Name + "-" + new E().GetType().Name + "-" + id.ToString() + ".jsonx`");
+                         E details                      = revisions.OrderByDescending(a => a.DateCreated).FirstOrDefault().Revisions;
+                         revisions.Add(new RevisionLog<E> {
+                              Context        = new C().GetType().Name,
+                              Entity         = new E().GetType().Name,
+                              Revisions      = details,
+                              RevisionType   = Enums.RevisionType.Delete
+                         });
                     } catch (Exception ex) {
                          ErrorMessage = ex.Message;
                          ErrorDetails.Add(ex.Message);

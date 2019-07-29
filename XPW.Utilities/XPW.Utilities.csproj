@@ -50,6 +50,7 @@
     <Compile Include="BaseContextManagement\BaseService.cs" />
     <Compile Include="BaseContextManagement\BaseServiceController.cs" />
     <Compile Include="BaseContextManagement\BaseWebApiConfig.cs" />
+    <Compile Include="BaseContextManagement\FromUrlAttribute.cs" />
     <Compile Include="CryptoHashingManagement\CardHashiingManagement.cs" />
     <Compile Include="CryptoHashingManagement\HashUtilityManagement.cs" />
     <Compile Include="DatabaseValidation\DatabaseConnectionValidation.cs" />
