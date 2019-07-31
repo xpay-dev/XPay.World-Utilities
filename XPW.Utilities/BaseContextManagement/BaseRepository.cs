@@ -23,6 +23,9 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
+          public virtual string ContextName() {
+               return Context.GetType().Name;
+          }
           public virtual IQueryable<T> All() {
                try {
                     IQueryable<T> queryable = Context.Set<T>();
@@ -412,6 +415,7 @@ namespace XPW.Utilities.BaseContext {
      }
 
      public interface IBaseRepository<T> : IDisposable where T : class {
+          string ContextName();
           IQueryable<T> All();
           IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
           T Find(int id);

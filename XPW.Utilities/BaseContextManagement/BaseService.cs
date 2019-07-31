@@ -34,6 +34,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Save(T entity) {
+               string contextName = Repository.ContextName();
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
