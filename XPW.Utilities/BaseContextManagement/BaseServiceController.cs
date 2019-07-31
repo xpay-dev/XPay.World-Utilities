@@ -42,6 +42,7 @@ namespace XPW.Utilities.BaseContextManagement {
           public List<string> ErrorDetails        = new List<string>();
           public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
           public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+          private static readonly bool SaveLog    = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"].ToString());
           [Route("get-all")]
           [HttpGet]
           public virtual async Task<GenericResponseListModel<E>> GetAll() {
@@ -67,7 +68,7 @@ namespace XPW.Utilities.BaseContextManagement {
           }
           [Route("get/{id}")]
           [HttpGet]
-          public virtual async Task<GenericResponseModel<E>> Get([FromUrl]string id) {
+          public virtual async Task<GenericResponseModel<E>> Get([FromUri]string id) {
                return await Task.Run(() => {
                     var data = new E();
                     try {
@@ -103,7 +104,7 @@ namespace XPW.Utilities.BaseContextManagement {
           }
           [Route("delete/{id}")]
           [HttpDelete]
-          public virtual async Task<GenericResponseModel<E>> Delete([FromUrl]string id) {
+          public virtual async Task<GenericResponseModel<E>> Delete([FromUri]string id) {
                return await Task.Run(() => {
                     var data = new E();
                     try {
@@ -132,14 +133,6 @@ namespace XPW.Utilities.BaseContextManagement {
                               ErrorCode = "800.32";
                               throw new Exception("Invalid data reference.");
                          }
-                         List<RevisionLog<E>> revisions = RevisionLogs<E>.Read(new C().GetType().Name + "-" + new E().GetType().Name + "-" + id.ToString() + ".jsonx`");
-                         E details                      = revisions.OrderByDescending(a => a.DateCreated).FirstOrDefault().Revisions;
-                         revisions.Add(new RevisionLog<E> {
-                              Context        = new C().GetType().Name,
-                              Entity         = new E().GetType().Name,
-                              Revisions      = details,
-                              RevisionType   = Enums.RevisionType.Delete
-                         });
                     } catch (Exception ex) {
                          ErrorMessage = ex.Message;
                          ErrorDetails.Add(ex.Message);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
+using XPW.Utilities.Logs;
+using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContext {
      public abstract class BaseService<T> : IDisposable where T : class, new() {
@@ -21,7 +23,7 @@ namespace XPW.Utilities.BaseContext {
      }
 
      public abstract class BaseService<T, TR> where TR : IBaseRepository<T>, new() where T : class, new() {
-          public static readonly bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"].ToString());
+          public static readonly bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
           #region Repository
           private TR _Repository;
           protected TR Repository {
@@ -34,13 +36,23 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Save(T entity) {
-               string contextName = Repository.ContextName();
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Add(entity);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Create
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);                      
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -53,6 +65,17 @@ namespace XPW.Utilities.BaseContext {
 
                     entity = Repository.AddReturn(entity);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Create
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);
+                    }
                     return entity;
                } catch (Exception ex) {
                     throw ex;
@@ -61,11 +84,24 @@ namespace XPW.Utilities.BaseContext {
 
           public virtual void Save(IEnumerable<T> entities) {
                try {
-                    if (entities == null)
+                    if (entities == null) {
                          throw new ArgumentNullException("entities");
-
+                    }
                     Repository.Add(entities);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Create
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -77,7 +113,20 @@ namespace XPW.Utilities.BaseContext {
                          throw new ArgumentNullException("entities");
 
                     entities = Repository.AddReturn(entities);
-                    Repository.Save();
+                    Repository.Save();                    
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Create
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                     return entities;
                } catch (Exception ex) {
                     throw ex;
@@ -91,6 +140,17 @@ namespace XPW.Utilities.BaseContext {
 
                     Repository.Edit(entity);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Update
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -103,19 +163,43 @@ namespace XPW.Utilities.BaseContext {
 
                     entity = Repository.EditReturn(entity);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Update
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);
+                    }
                     return entity;
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
-          public virtual void Update(IEnumerable<T> entity) {
+          public virtual void Update(IEnumerable<T> entities) {
                try {
-                    if (entity == null)
+                    if (entities == null)
                          throw new ArgumentNullException("entity");
 
-                    Repository.Edit(entity);
+                    Repository.Edit(entities);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Update
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -128,6 +212,19 @@ namespace XPW.Utilities.BaseContext {
 
                     entities = Repository.EditReturn(entities);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Update
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                     return entities;
                } catch (Exception ex) {
                     throw ex;
@@ -136,8 +233,20 @@ namespace XPW.Utilities.BaseContext {
 
           public virtual void Delete(Guid id) {
                try {
+                    var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Delete
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -145,9 +254,25 @@ namespace XPW.Utilities.BaseContext {
 
           public virtual void Delete(IEnumerable<Guid> ids) {
                try {
-                    foreach (var id in ids)
+                    var entities = new List<T>();
+                    foreach (var id in ids) {
+                         entities.Add(Get(id));
                          Repository.Delete(id);
+                    }
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Delete
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -155,8 +280,20 @@ namespace XPW.Utilities.BaseContext {
 
           public virtual void Delete(int id) {
                try {
+                    var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName       = Repository.ContextName();
+                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = entity,
+                              RevisionType        = Enums.RevisionType.Delete
+                         };
+                         RevisionLogs<T>.Write(revision, fileName);
+                    }
                } catch (Exception ex) {
                     throw ex;
                }
@@ -164,9 +301,25 @@ namespace XPW.Utilities.BaseContext {
 
           public virtual void Delete(IEnumerable<int> ids) {
                try {
-                    foreach (var id in ids)
+                    var entities = new List<T>();
+                    foreach (var id in ids) {
+                         entities.Add(Get(id));
                          Repository.Delete(id);
+                    }
                     Repository.Save();
+                    if (saveRevision) {
+                         string contextName            = Repository.ContextName();
+                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         entities.ToList().ForEach(a   => {
+                              RevisionLog<T> revision  = new RevisionLog<T> {
+                                   Context             = contextName,
+                                   Entity              = new T().GetType().Name,
+                                   Revisions           = a,
+                                   RevisionType        = Enums.RevisionType.Delete
+                              };
+                              RevisionLogs<T>.Write(revision, fileName);
+                         });
+                    }
                } catch (Exception ex) {
                     throw ex;
                }

@@ -6,7 +6,7 @@ using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Logs {
      public class RevisionLogs<T> where T : class, new() {
-          public static string Write(List<RevisionLog<T>> log, string fileName) {
+          public static string Write(RevisionLog<T> log, string fileName) {
                string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revision";
                if (!Directory.Exists(FileLocation)) {
                     Directory.CreateDirectory(FileLocation);
@@ -16,7 +16,9 @@ namespace XPW.Utilities.Logs {
                     file.Close();
                     file.Dispose();
                }
-               return Writer<RevisionLog<T>>.JsonWriterList(log, FileLocation + "\\" + fileName);
+               var revisions =  Reader<RevisionLog<T>>.JsonReaderList(FileLocation + "\\" + fileName);
+               revisions.Add(log);
+               return Writer<RevisionLog<T>>.JsonWriterList(revisions, FileLocation + "\\" + fileName);
           }
           public static List<RevisionLog<T>> Read(string fileName) {
                string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revision";
