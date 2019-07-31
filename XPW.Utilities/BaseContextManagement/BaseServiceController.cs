@@ -37,6 +37,7 @@ namespace XPW.Utilities.BaseContextManagement {
           public class BaseServices     : BaseService<E, BaseRepo> { }
           public BaseServices Service             = new BaseServices();
           public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
+          public string ErrorCode                 = string.Empty;
           public string ErrorMessage              = string.Empty;
           public List<string> ErrorDetails        = new List<string>();
           public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
@@ -70,7 +71,8 @@ namespace XPW.Utilities.BaseContextManagement {
                return await Task.Run(() => {
                     var data = new E();
                     try {
-                         if(!Guid.TryParse(id, out Guid guidId) && !int.TryParse(id, out int intId)) {
+                         ErrorCode = "800.2";
+                         if (!Guid.TryParse(id, out Guid guidId) && !int.TryParse(id, out int intId)) {
                               id = crypto.Decrypt((id.Contains(" ") ? id.Replace(" ", "+") : id));
                          }
                          var isGuid     = Guid.TryParse(id, out guidId);
@@ -80,7 +82,8 @@ namespace XPW.Utilities.BaseContextManagement {
                          } else if (isNumeric) {
                               data = Service.Get(intId);
                          } else {
-                              throw new Exception("Invalid data reference");
+                              ErrorCode = "800.21";
+                              throw new Exception("Invalid data reference.");
                          }
                     } catch (Exception ex) {
                          ErrorMessage = ex.Message;
@@ -92,7 +95,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          ReferenceObject     = string.IsNullOrEmpty(ErrorMessage) ? data : null,
                          ErrorMessage        = string.IsNullOrEmpty(ErrorMessage) ? null : new ErrorMessage {
                               Details        = ErrorDetails,
-                              ErrNumber      = "800.2",
+                              ErrNumber      = ErrorCode,
                               Message        = ErrorMessage
                          }
                     };
@@ -104,6 +107,7 @@ namespace XPW.Utilities.BaseContextManagement {
                return await Task.Run(() => {
                     var data = new E();
                     try {
+                         ErrorCode = "800.3";
                          if (!Guid.TryParse(id, out Guid guidId) && !int.TryParse(id, out int intId)) {
                               var crypto = new HashUtilityManagement(key, iv);
                               id = crypto.Decrypt((id.Contains(" ") ? id.Replace(" ", "+") : id));
@@ -113,17 +117,20 @@ namespace XPW.Utilities.BaseContextManagement {
                          if (isGuid) {
                               data = Service.Get(guidId);
                                    if (data == null) {
-                                        throw new Exception("Invalid data reference");
+                                   ErrorCode = "800.31";
+                                   throw new Exception("Invalid data reference.");
                               }
                               Service.Delete(guidId);
                          } else if (isNumeric) {
                               data = Service.Get(intId);
                               if (data == null) {
-                                   throw new Exception("Invalid data reference");
+                                   ErrorCode = "800.31";
+                                   throw new Exception("Invalid data reference.");
                               }
                               Service.Delete(intId);
                          } else {
-                              throw new Exception("Invalid data reference");
+                              ErrorCode = "800.32";
+                              throw new Exception("Invalid data reference.");
                          }
                          List<RevisionLog<E>> revisions = RevisionLogs<E>.Read(new C().GetType().Name + "-" + new E().GetType().Name + "-" + id.ToString() + ".jsonx`");
                          E details                      = revisions.OrderByDescending(a => a.DateCreated).FirstOrDefault().Revisions;
@@ -143,7 +150,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          ReferenceObject     = string.IsNullOrEmpty(ErrorMessage) ? data : null,
                          ErrorMessage        = string.IsNullOrEmpty(ErrorMessage) ? null : new ErrorMessage {
                               Details        = ErrorDetails,
-                              ErrNumber      = "800.2",
+                              ErrNumber      = ErrorCode,
                               Message        = ErrorMessage
                          }
                     };
