@@ -12,7 +12,7 @@ namespace XPW.Utilities.BaseContext {
      public abstract class BaseRepository<C, T> : IBaseRepository<T>, IDisposable
         where C : DbContext, new()
         where T : class, new() {
-          public C Context { get; set; } = Activator.CreateInstance<C>();
+          public C Context { get; set; }          = Activator.CreateInstance<C>();
           private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(15);
           public BaseRepository() {
                try {
@@ -62,8 +62,8 @@ namespace XPW.Utilities.BaseContext {
                     T entityObject = new T();
                     Task task = Task.Run(() => {
                          entityObject = Context.Set<T>().Find(new object[] {
-                        id
-                    });
+                              id
+                         });
                     });
                     if (!task.Wait(TimeSpan)) {
                          throw new Exception("Connecting to database was taking to long, please try again later");
@@ -78,8 +78,8 @@ namespace XPW.Utilities.BaseContext {
                     T entityObject = new T();
                     Task task = Task.Run(() => {
                          entityObject = Context.Set<T>().Find(new object[] {
-                        id
-                    });
+                              id
+                         });
                     });
                     if (!task.Wait(TimeSpan)) {
                          throw new Exception("Connecting to database was taking to long, please try again later");
@@ -105,7 +105,7 @@ namespace XPW.Utilities.BaseContext {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities)
+                         foreach (T entity in entities)
                               Context.Set<T>().Add(entity);
                     });
                     if (!task.Wait(TimeSpan)) {
@@ -134,7 +134,7 @@ namespace XPW.Utilities.BaseContext {
           public virtual void Edit(IEnumerable<T> entities) {
                try {
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities) {
+                         foreach (T entity in entities) {
                               if (Context.Set<T>().Local.Any(e => e == entity)) {
                                    Context.Entry(entity).State = EntityState.Modified;
                               } else {
@@ -164,7 +164,7 @@ namespace XPW.Utilities.BaseContext {
           public virtual void Edit(IEnumerable<T> entities, Expression<Func<IUpdateConfiguration<T>, object>> mapping) {
                try {
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities)
+                         foreach (T entity in entities)
                               Context.UpdateGraph(entity, mapping);
                     });
                     if (!task.Wait(TimeSpan)) {
@@ -192,7 +192,7 @@ namespace XPW.Utilities.BaseContext {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities) {
+                         foreach (T entity in entities) {
                               T entityObject = Context.Set<T>().Add(entity);
                               entityObjecTimeSpan.Add(entityObject);
                          }
@@ -228,12 +228,12 @@ namespace XPW.Utilities.BaseContext {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities) {
+                         foreach (T entity in entities) {
                               if (Context.Set<T>().Local.Any(e => e == entity)) {
                                    Context.Entry(entity).State = EntityState.Modified;
                                    entityObjecTimeSpan.Add(entity);
                               } else {
-                                   T entityObject = Context.UpdateGraph<T>(entity);
+                                   T entityObject = Context.UpdateGraph(entity);
                                    entityObjecTimeSpan.Add(entityObject);
                               }
                          }
@@ -264,7 +264,7 @@ namespace XPW.Utilities.BaseContext {
                try {
                     List<T> entityObjecTimeSpan = new List<T>();
                     Task task = Task.Run(() => {
-                         foreach (var entity in entities) {
+                         foreach (T entity in entities) {
                               Context.UpdateGraph(entity, mapping);
                               entityObjecTimeSpan.Add(entity);
                          }

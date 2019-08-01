@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using XPW.Utilities.Logs;
@@ -22,8 +23,7 @@ namespace XPW.Utilities.BaseContext {
           }
      }
 
-     public abstract class BaseService<T, TR> where TR : IBaseRepository<T>, new() where T : class, new() {
-          public static readonly bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
+     public abstract class BaseService<T, TR> where TR : IBaseRepository<T>, IDisposable, new() where T : class, new() {
           #region Repository
           private TR _Repository;
           protected TR Repository {
@@ -36,6 +36,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Save(T entity) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
@@ -44,7 +45,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -59,6 +60,7 @@ namespace XPW.Utilities.BaseContext {
           }
           
           public virtual T SaveReturn(T entity) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
@@ -67,7 +69,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -78,11 +80,16 @@ namespace XPW.Utilities.BaseContext {
                     }
                     return entity;
                } catch (Exception ex) {
-                    throw ex;
+                    var st = new StackTrace(ex, true);
+                    var frame = st.GetFrame(0);
+                    var line = frame.GetFileLineNumber();
+                    var message = ex.Message + st + "=========" + line;
+                    throw new Exception(message);
                }
           }
 
           public virtual void Save(IEnumerable<T> entities) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null) {
                          throw new ArgumentNullException("entities");
@@ -91,7 +98,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -108,6 +115,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual IEnumerable<T> SaveReturn(IEnumerable<T> entities) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entities");
@@ -116,7 +124,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();                    
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -134,6 +142,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Update(T entity) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
@@ -142,7 +151,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -157,6 +166,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual T UpdateReturn(T entity) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
@@ -165,7 +175,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -181,6 +191,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Update(IEnumerable<T> entities) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entity");
@@ -189,7 +200,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -206,6 +217,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual IEnumerable<T> UpdateReturn(IEnumerable<T> entities) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entity");
@@ -214,7 +226,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -232,13 +244,14 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Delete(Guid id) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -253,6 +266,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Delete(IEnumerable<Guid> ids) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
@@ -262,7 +276,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -279,13 +293,14 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Delete(int id) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         var fileName             = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
@@ -300,6 +315,7 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Delete(IEnumerable<int> ids) {
+               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
@@ -309,7 +325,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         var fileName                  = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,

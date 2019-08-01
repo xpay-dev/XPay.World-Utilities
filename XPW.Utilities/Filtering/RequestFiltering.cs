@@ -24,9 +24,9 @@ namespace XPW.Utilities.Filtering {
                                    modelError += error.ErrorMessage + ", ";
                               }
                               modelError = modelError.TrimEnd(' ').TrimEnd(',').ToLower();
-                              modelErrors.Add(string.Format("{0} {1}", key, modelError));
+                              modelErrors.Add(string.Format("{0}: {1}", key, modelError));
                          } else {
-                              modelErrors.Add(string.Format("{0} cannot be null or empty", key));
+                              modelErrors.Add(string.Format("{0}: cannot be null or empty", key));
                          }
                     }
                     var details = string.Empty;
