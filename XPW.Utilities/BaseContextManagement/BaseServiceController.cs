@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using XPW.Utilities.BaseContext;
 using XPW.Utilities.CryptoHashingManagement;
-using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContextManagement {
      public abstract class BaseServiceController<S> : ApiController, IDisposable 
           where S : class, new() {
-          private S BaseService = Activator.CreateInstance<S>();
+          private readonly S BaseService = Activator.CreateInstance<S>();
           public new virtual void Dispose()       => base.Dispose();
           public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
           public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();

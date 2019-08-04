@@ -34,17 +34,16 @@ namespace XPW.Utilities.Filtering {
                          details += a;
                     });
                     var response = new GenericResponseModel {
-                         Code = CodeStatus.InvalidInput,
-                         CodeStatus = CodeStatus.InvalidInput.ToString(),
-                         ErrorMessage = new ErrorMessage() {
-                              ErrNumber = "01",
-                              Details = modelErrors,
-                              Message = CodeStatus.InvalidInput.ToString(),
-                         },
-                         ReferenceObject = null
+                         Code               = CodeStatus.InvalidInput,
+                         CodeStatus         = CodeStatus.InvalidInput.ToString(),
+                         ErrorMessage       = new ErrorMessage() {
+                              ErrNumber     = "01",
+                              Details       = modelErrors,
+                              Message       = CodeStatus.InvalidInput.ToString(),
+                         }, ReferenceObject = null
                     };
                     var json = JsonConvert.SerializeObject(response);
-                    actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, json);
+                    actionContext.Response         = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, json);
                     actionContext.Response.Content = new StringContent(json, Encoding.UTF8, "application/json");
                }
           }

@@ -52,6 +52,7 @@
     <Compile Include="BaseContextManagement\BaseWebApiConfig.cs" />
     <Compile Include="CryptoHashingManagement\CardHashiingManagement.cs" />
     <Compile Include="CryptoHashingManagement\HashUtilityManagement.cs" />
+    <Compile Include="CustomExceptions\RepositoryException.cs" />
     <Compile Include="DatabaseValidation\DatabaseConnectionValidation.cs" />
     <Compile Include="EmailManagement\EmailSending.cs" />
     <Compile Include="Enums\Enums.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="HeaderValidations\Authorization.cs" />
     <Compile Include="HTTPSChecker\HTTPSValidation.cs" />
     <Compile Include="IPWhiteListing\IPAuthorization.cs" />
+    <Compile Include="Logs\ErrorLogs.cs" />
     <Compile Include="Logs\RevisionLogs.cs" />
     <Compile Include="NoSQL\Reader.cs" />
     <Compile Include="NoSQL\Writer.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="UtilityModels\APICallManagementModel.cs" />
     <Compile Include="UtilityModels\AppConfigSettingsModel.cs" />
     <Compile Include="UtilityModels\EmailManagementModel.cs" />
+    <Compile Include="UtilityModels\ErrorLogsModel.cs" />
     <Compile Include="UtilityModels\GenericResponseModel.cs" />
     <Compile Include="UtilityModels\GoogleRecaptchaModel.cs" />
     <Compile Include="UtilityModels\IPWhiteListingModel.cs" />

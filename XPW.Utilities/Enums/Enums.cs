@@ -30,4 +30,11 @@
           Update,
           Delete
      }
+     public enum ErrorResolution {
+          ToDo,
+          Pending,
+          Inprogress,
+          Resolved,
+          Done
+     }
 }

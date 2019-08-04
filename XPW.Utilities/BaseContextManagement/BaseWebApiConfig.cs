@@ -6,7 +6,6 @@ using System.Web.Http.Routing;
 namespace XPW.Utilities.BaseContextManagement {
      public static class BaseWebApiConfig {
           public static void Register(HttpConfiguration config) {
-
                //config.MapHttpAttributeRoutes();
                config.MapHttpAttributeRoutes(new WebApiCustomDirectRouteProvider());
 

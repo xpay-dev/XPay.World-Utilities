@@ -45,14 +45,14 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Create
                          };
-                         RevisionLogs<T>.Write(revision, fileName);                      
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                } catch (Exception ex) {
                     throw ex;
@@ -69,22 +69,23 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Create
                          };
-                         RevisionLogs<T>.Write(revision, fileName);
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                     return entity;
                } catch (Exception ex) {
-                    var st = new StackTrace(ex, true);
-                    var frame = st.GetFrame(0);
-                    var line = frame.GetFileLineNumber();
-                    var message = ex.Message + st + "=========" + line;
-                    throw new Exception(message);
+                    //var st = new StackTrace(ex, true);
+                    //var frame = st.GetFrame(0);
+                    //var line = frame.GetFileLineNumber();
+                    //var message = ex.Message + st + "=========" + line;
+                    //throw new Exception(message);
+                    throw ex;
                }
           }
 
@@ -98,7 +99,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -106,7 +107,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Create
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                } catch (Exception ex) {
@@ -124,7 +125,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();                    
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -132,7 +133,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Create
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                     return entities;
@@ -151,14 +152,14 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Update
                          };
-                         RevisionLogs<T>.Write(revision, fileName);
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                } catch (Exception ex) {
                     throw ex;
@@ -175,14 +176,14 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Update
                          };
-                         RevisionLogs<T>.Write(revision, fileName);
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                     return entity;
                } catch (Exception ex) {
@@ -200,7 +201,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -208,7 +209,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Update
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                } catch (Exception ex) {
@@ -226,7 +227,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -234,7 +235,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Update
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                     return entities;
@@ -251,14 +252,14 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Delete
                          };
-                         RevisionLogs<T>.Write(revision, fileName);
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                } catch (Exception ex) {
                     throw ex;
@@ -276,7 +277,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -284,7 +285,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Delete
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                } catch (Exception ex) {
@@ -300,14 +301,14 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName       = Repository.ContextName();
-                         string fileName          = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName          = new T().GetType().Name + ".json";
                          RevisionLog<T> revision  = new RevisionLog<T> {
                               Context             = contextName,
                               Entity              = new T().GetType().Name,
                               Revisions           = entity,
                               RevisionType        = Enums.RevisionType.Delete
                          };
-                         RevisionLogs<T>.Write(revision, fileName);
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
                     }
                } catch (Exception ex) {
                     throw ex;
@@ -325,7 +326,7 @@ namespace XPW.Utilities.BaseContext {
                     Repository.Save();
                     if (saveRevision) {
                          string contextName            = Repository.ContextName();
-                         string fileName               = contextName + "-" + new T().GetType().Name + ".json";
+                         string fileName               = new T().GetType().Name + ".json";
                          entities.ToList().ForEach(a   => {
                               RevisionLog<T> revision  = new RevisionLog<T> {
                                    Context             = contextName,
@@ -333,7 +334,7 @@ namespace XPW.Utilities.BaseContext {
                                    Revisions           = a,
                                    RevisionType        = Enums.RevisionType.Delete
                               };
-                              RevisionLogs<T>.Write(revision, fileName);
+                              RevisionLogs<T>.Write(revision, contextName, fileName);
                          });
                     }
                } catch (Exception ex) {
