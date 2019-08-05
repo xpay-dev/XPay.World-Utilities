@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using XPW.Utilities.BaseContext;
 using XPW.Utilities.NoSQL;
 
 namespace XPW.Utilities.Logs {
-     public class ErrorLogs<T> where T : class, new() {
-          public static string Write(ErrorLogs<T> log, string errorType, string fileName) {
+     public class ErrorLogs<T> where T : BaseModelError, new() {
+          public static string Write(T log, string fileName) {
                try {
-                    string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + errorType + "s\\" + DateTime.Now.ToString("MM-dd-yyyy");
+                    string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                     if (!Directory.Exists(FileLocation)) {
                          Directory.CreateDirectory(FileLocation);
                     }
@@ -17,22 +19,26 @@ namespace XPW.Utilities.Logs {
                          file.Close();
                          file.Dispose();
                     }
-                    List<ErrorLogs<T>> logs = Reader<ErrorLogs<T>>.JsonReaderList(FileLocation + "\\" + fileName);
+                    List<T> logs = Reader<T>.JsonReaderList(FileLocation + "\\" + fileName);
                     if (logs == null) {
-                         logs = new List<ErrorLogs<T>>();
+                         logs = new List<T>();
                     }
                     if (logs.Count == 0) {
-                         logs = new List<ErrorLogs<T>>();
+                         logs = new List<T>();
                     }
                     logs.Add(log);
-                    return Writer<ErrorLogs<T>>.JsonWriterList(logs, FileLocation + "\\" + fileName);
+                    return Writer<T>.JsonWriterList(logs, FileLocation + "\\" + fileName);
                } catch (Exception ex) {
+                    var st = new StackTrace(ex, true);
+                    var frame = st.GetFrame(0);
+                    var line = frame.GetFileLineNumber();
+                    var message = ex.Message + st + "=========" + line;
                     throw ex;
                }
           }
-          public static List<ErrorLogs<T>> Read(string errorType, string fileName) {
+          public static List<T> Read(string fileName) {
                try {
-                    string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + errorType + "s\\" + DateTime.Now.ToString("MM-dd-yyyy");
+                    string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                     if (!Directory.Exists(FileLocation)) {
                          Directory.CreateDirectory(FileLocation);
                     }
@@ -41,12 +47,12 @@ namespace XPW.Utilities.Logs {
                          file.Close();
                          file.Dispose();
                     }
-                    List<ErrorLogs<T>> logs = Reader<ErrorLogs<T>>.JsonReaderList(FileLocation + "\\" + fileName);
+                    List<T> logs = Reader<T>.JsonReaderList(FileLocation + "\\" + fileName);
                     if (logs == null) {
-                         logs = new List<ErrorLogs<T>>();
+                         logs = new List<T>();
                     }
                     if (logs.Count == 0) {
-                         logs = new List<ErrorLogs<T>>();
+                         logs = new List<T>();
                     }
                     return logs;
                } catch (Exception ex) {

@@ -6,5 +6,6 @@ namespace XPW.Utilities.UtilityModels {
      public class SupportErrorLogModel : BaseModelError { 
      }
      public class SystemErrorLogModel : BaseModelError {
+          public int LineNumber { get; set; }
      }
 }

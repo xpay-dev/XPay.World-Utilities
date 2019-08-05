@@ -6,7 +6,7 @@ using XPW.Utilities.Enums;
 namespace XPW.Utilities.BaseContext {
      public class BaseModelGuid {
           public BaseModelGuid() {
-               Id = Guid.NewGuid();
+               Id          = Guid.NewGuid();
                DateCreated = DateTime.Now;
           }
           [Key]
@@ -30,10 +30,15 @@ namespace XPW.Utilities.BaseContext {
           public DateTime DateCreated { get; set; }
      }
      public class BaseModelError {
-          public int Id { get; set; }
+          public BaseModelError() {
+               Id          = Guid.NewGuid();
+               DateCreated = DateTime.Now;
+               Tag         = ErrorResolution.ToDo;
+          }
+          public Guid Id { get; set; }
+          public string ErrorType { get; set; }
           public string ErrorCode { get; set; }
           public string Message { get; set; }
-          public string Application { get; set; }
           public DateTime DateCreated { get; set; }
           public ErrorResolution Tag { get; set; }
      }

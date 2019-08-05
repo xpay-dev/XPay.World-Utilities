@@ -36,48 +36,42 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Save(T entity) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Add(entity);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Create
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Create
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
           
           public virtual T SaveReturn(T entity) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     entity = Repository.AddReturn(entity);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Create
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Create
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                     return entity;
                } catch (Exception ex) {
                     //var st = new StackTrace(ex, true);
@@ -90,52 +84,46 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Save(IEnumerable<T> entities) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null) {
                          throw new ArgumentNullException("entities");
                     }
                     Repository.Add(entities);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Create
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Create
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual IEnumerable<T> SaveReturn(IEnumerable<T> entities) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entities");
 
                     entities = Repository.AddReturn(entities);
-                    Repository.Save();                    
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Create
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    Repository.Save();          
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Create
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                     return entities;
                } catch (Exception ex) {
                     throw ex;
@@ -143,48 +131,42 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Update(T entity) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Edit(entity);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Update
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Update
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual T UpdateReturn(T entity) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     entity = Repository.EditReturn(entity);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Update
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Update
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                     return entity;
                } catch (Exception ex) {
                     throw ex;
@@ -192,52 +174,46 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Update(IEnumerable<T> entities) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Edit(entities);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Update
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Update
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual IEnumerable<T> UpdateReturn(IEnumerable<T> entities) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     if (entities == null)
                          throw new ArgumentNullException("entity");
 
                     entities = Repository.EditReturn(entities);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Update
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Update
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                     return entities;
                } catch (Exception ex) {
                     throw ex;
@@ -245,29 +221,25 @@ namespace XPW.Utilities.BaseContext {
           }
 
           public virtual void Delete(Guid id) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Delete
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Delete
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual void Delete(IEnumerable<Guid> ids) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
@@ -275,48 +247,42 @@ namespace XPW.Utilities.BaseContext {
                          Repository.Delete(id);
                     }
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Delete
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Delete
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual void Delete(int id) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entity = Get(id);
                     Repository.Delete(id);
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName       = Repository.ContextName();
-                         string fileName          = new T().GetType().Name + ".json";
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = entity,
-                              RevisionType        = Enums.RevisionType.Delete
-                         };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
-                    }
+                    string contextName       = Repository.ContextName();
+                    string fileName          = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision  = new RevisionLog<T> {
+                         Context             = contextName,
+                         Entity              = new T().GetType().Name,
+                         Revisions           = entity,
+                         RevisionType        = Enums.RevisionType.Delete
+                    };
+                    RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
           public virtual void Delete(IEnumerable<int> ids) {
-               bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
@@ -324,19 +290,17 @@ namespace XPW.Utilities.BaseContext {
                          Repository.Delete(id);
                     }
                     Repository.Save();
-                    if (saveRevision) {
-                         string contextName            = Repository.ContextName();
-                         string fileName               = new T().GetType().Name + ".json";
-                         entities.ToList().ForEach(a   => {
-                              RevisionLog<T> revision  = new RevisionLog<T> {
-                                   Context             = contextName,
-                                   Entity              = new T().GetType().Name,
-                                   Revisions           = a,
-                                   RevisionType        = Enums.RevisionType.Delete
-                              };
-                              RevisionLogs<T>.Write(revision, contextName, fileName);
-                         });
-                    }
+                    string contextName            = Repository.ContextName();
+                    string fileName               = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(a   => {
+                         RevisionLog<T> revision  = new RevisionLog<T> {
+                              Context             = contextName,
+                              Entity              = new T().GetType().Name,
+                              Revisions           = a,
+                              RevisionType        = Enums.RevisionType.Delete
+                         };
+                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                    });
                } catch (Exception ex) {
                     throw ex;
                }

@@ -53,6 +53,7 @@
     <Compile Include="CryptoHashingManagement\CardHashiingManagement.cs" />
     <Compile Include="CryptoHashingManagement\HashUtilityManagement.cs" />
     <Compile Include="CustomExceptions\RepositoryException.cs" />
+    <Compile Include="CustomExceptions\RequestFilteringException.cs" />
     <Compile Include="DatabaseValidation\DatabaseConnectionValidation.cs" />
     <Compile Include="EmailManagement\EmailSending.cs" />
     <Compile Include="Enums\Enums.cs" />
