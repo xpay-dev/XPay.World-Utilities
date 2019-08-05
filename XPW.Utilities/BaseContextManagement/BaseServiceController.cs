@@ -13,20 +13,20 @@ namespace XPW.Utilities.BaseContextManagement {
      public abstract class BaseServiceController<S> : ApiController, IDisposable 
           where S : class, new() {
           private readonly S BaseService = Activator.CreateInstance<S>();
-          public new virtual void Dispose()       => base.Dispose();
-          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
-          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
-          public string ErrorMessage              = string.Empty;
-          public List<string> ErrorDetails        = new List<string>();
+          public new virtual void Dispose()            => base.Dispose();
+          public static readonly string key            = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv             = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+          public HashUtilityManagement crypto          = new HashUtilityManagement(key, iv);
+          public string ErrorMessage                   = string.Empty;
+          public List<string> ErrorDetails             = new List<string>();
      }
      public abstract class BaseServiceController : ApiController, IDisposable {
-          public new virtual void Dispose()       => base.Dispose();
-          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
-          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
-          public string ErrorMessage              = string.Empty;
-          public List<string> ErrorDetails        = new List<string>();
+          public new virtual void Dispose()            => base.Dispose();
+          public static readonly string key            = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv             = ConfigurationManager.AppSettings["DefaultIV"].ToString();
+          public HashUtilityManagement crypto          = new HashUtilityManagement(key, iv);
+          public string ErrorMessage                   = string.Empty;
+          public List<string> ErrorDetails             = new List<string>();
      }
      public abstract class BaseServiceController<E, C> : ApiController, IDisposable 
           where E : class, new() 
@@ -34,14 +34,13 @@ namespace XPW.Utilities.BaseContextManagement {
           public class BaseRepo         : BaseRepository<C, E>, IBaseRepo { }
           internal interface IBaseRepo  : IBaseRepository<E> { }
           public class BaseServices     : BaseService<E, BaseRepo> { }
-          public BaseServices Service             = new BaseServices();
-          public HashUtilityManagement crypto     = new HashUtilityManagement(key, iv);
-          public string ErrorCode                 = string.Empty;
-          public string ErrorMessage              = string.Empty;
-          public List<string> ErrorDetails        = new List<string>();
-          public static readonly string key       = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv        = ConfigurationManager.AppSettings["DefaultIV"].ToString();
-          private static readonly bool SaveLog    = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"].ToString());
+          public BaseServices Service                  = new BaseServices();
+          public HashUtilityManagement crypto          = new HashUtilityManagement(key, iv);
+          public string ErrorCode                      = string.Empty;
+          public string ErrorMessage                   = string.Empty;
+          public List<string> ErrorDetails             = new List<string>();
+          public static readonly string key            = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv             = ConfigurationManager.AppSettings["DefaultIV"].ToString();
           [Route("get-all")]
           [HttpGet]
           public virtual async Task<GenericResponseListModel<E>> GetAll() {

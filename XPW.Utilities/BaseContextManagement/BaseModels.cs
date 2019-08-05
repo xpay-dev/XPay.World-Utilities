@@ -29,17 +29,4 @@ namespace XPW.Utilities.BaseContext {
           public int Id { get; set; }
           public DateTime DateCreated { get; set; }
      }
-     public class BaseModelError {
-          public BaseModelError() {
-               Id          = Guid.NewGuid();
-               DateCreated = DateTime.Now;
-               Tag         = ErrorResolution.ToDo;
-          }
-          public Guid Id { get; set; }
-          public string ErrorType { get; set; }
-          public string ErrorCode { get; set; }
-          public string Message { get; set; }
-          public DateTime DateCreated { get; set; }
-          public ErrorResolution Tag { get; set; }
-     }
 }

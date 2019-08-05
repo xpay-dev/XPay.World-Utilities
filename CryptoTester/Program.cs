@@ -13,7 +13,6 @@ namespace CryptoTester {
                //Console.WriteLine("\nEncode : " + encode);
                //var decode = crypto.Encrypt(encode);
                //Console.WriteLine("\nDecode : " + decode);
-               throw new RepositoryException("00", "Test", "None Zero", "Program");
           }
      }
 }

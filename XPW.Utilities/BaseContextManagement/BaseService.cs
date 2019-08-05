@@ -74,11 +74,6 @@ namespace XPW.Utilities.BaseContext {
                     RevisionLogs<T>.Write(revision, contextName, fileName);
                     return entity;
                } catch (Exception ex) {
-                    //var st = new StackTrace(ex, true);
-                    //var frame = st.GetFrame(0);
-                    //var line = frame.GetFileLineNumber();
-                    //var message = ex.Message + st + "=========" + line;
-                    //throw new Exception(message);
                     throw ex;
                }
           }

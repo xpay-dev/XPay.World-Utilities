@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Xpay.Web\packages\XPW.DLLs\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,8 +52,6 @@
     <Compile Include="BaseContextManagement\BaseWebApiConfig.cs" />
     <Compile Include="CryptoHashingManagement\CardHashiingManagement.cs" />
     <Compile Include="CryptoHashingManagement\HashUtilityManagement.cs" />
-    <Compile Include="CustomExceptions\RepositoryException.cs" />
-    <Compile Include="CustomExceptions\RequestFilteringException.cs" />
     <Compile Include="DatabaseValidation\DatabaseConnectionValidation.cs" />
     <Compile Include="EmailManagement\EmailSending.cs" />
     <Compile Include="Enums\Enums.cs" />
