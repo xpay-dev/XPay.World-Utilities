@@ -10,7 +10,6 @@ namespace XPW.Utilities.UtilityModels {
                Tag = ErrorResolution.ToDo;
           }
           public Guid Id { get; set; }
-          public string ErrorType { get; set; }
           public string ErrorCode { get; set; }
           public string Message { get; set; }
           public string Application { get; set; }

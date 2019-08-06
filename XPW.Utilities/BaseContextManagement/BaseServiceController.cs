@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using XPW.Utilities.BaseContext;
 using XPW.Utilities.CryptoHashingManagement;
+using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContextManagement {
@@ -47,10 +50,26 @@ namespace XPW.Utilities.BaseContextManagement {
                return await Task.Run(() => {
                     var data = new List<E>();
                     try {
+                         ErrorCode = "800.1";
                          data = Service.GetAll().ToList();
                     } catch (Exception ex) {
-                         ErrorMessage = ex.Message;
-                         ErrorDetails.Add(ex.Message);
+                         string message = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
+                         ErrorDetails.Add(message);
+                         ErrorMessage        = message;
+                         MethodBase m        = MethodBase.GetCurrentMethod();
+                         StackTrace trace    = new StackTrace(ex, true);
+                         string sourceFile   = trace.GetFrame(0).GetFileName();
+                         ErrorLogs.Write(new ErrorLogsModel {
+                              Application    = Assembly.GetExecutingAssembly().GetName().Name,
+                              Controller     = GetType().Name,
+                              CurrentAction  = m.Name.Split('>')[0].TrimStart('<'),
+                              ErrorCode      = ErrorCode,
+                              Message        = message,
+                              SourceFile     = sourceFile,
+                              LineNumber     = trace.GetFrame(0).GetFileLineNumber(),
+                              StackTrace     = ex.ToString(),
+                              Method         = m.Name.Split('>')[0].TrimStart('<')
+                         }, ex);
                     }
                     return new GenericResponseListModel<E>() {
                          Code                = string.IsNullOrEmpty(ErrorMessage) ? Enums.CodeStatus.Success : Enums.CodeStatus.Error,
@@ -58,7 +77,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          ReferenceObject     = string.IsNullOrEmpty(ErrorMessage) ? data : null,
                          ErrorMessage        = string.IsNullOrEmpty(ErrorMessage) ? null : new ErrorMessage {
                               Details        = ErrorDetails,
-                              ErrNumber      = "800.1",
+                              ErrNumber      = ErrorCode,
                               Message        = ErrorMessage
                          }
                     };
@@ -85,8 +104,23 @@ namespace XPW.Utilities.BaseContextManagement {
                               throw new Exception("Invalid data reference.");
                          }
                     } catch (Exception ex) {
-                         ErrorMessage = ex.Message;
-                         ErrorDetails.Add(ex.Message);
+                         string message = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
+                         ErrorDetails.Add(message);
+                         ErrorMessage        = message;
+                         MethodBase m        = MethodBase.GetCurrentMethod();
+                         StackTrace trace    = new StackTrace(ex, true);
+                         string sourceFile   = trace.GetFrame(0).GetFileName();
+                         ErrorLogs.Write(new ErrorLogsModel {
+                              Application    = Assembly.GetExecutingAssembly().GetName().Name,
+                              Controller     = GetType().Name,
+                              CurrentAction  = m.Name.Split('>')[0].TrimStart('<'),
+                              ErrorCode      = ErrorCode,
+                              Message        = message,
+                              SourceFile     = sourceFile,
+                              LineNumber     = trace.GetFrame(0).GetFileLineNumber(),
+                              StackTrace     = ex.ToString(),
+                              Method         = m.Name.Split('>')[0].TrimStart('<')
+                         }, ex);
                     }
                     return new GenericResponseModel<E>() {
                          Code                = string.IsNullOrEmpty(ErrorMessage) ? Enums.CodeStatus.Success : Enums.CodeStatus.Error,
@@ -132,8 +166,23 @@ namespace XPW.Utilities.BaseContextManagement {
                               throw new Exception("Invalid data reference.");
                          }
                     } catch (Exception ex) {
-                         ErrorMessage = ex.Message;
-                         ErrorDetails.Add(ex.Message);
+                         string message = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
+                         ErrorDetails.Add(message);
+                         ErrorMessage        = message;
+                         MethodBase m        = MethodBase.GetCurrentMethod();
+                         StackTrace trace    = new StackTrace(ex, true);
+                         string sourceFile   = trace.GetFrame(0).GetFileName();
+                         ErrorLogs.Write(new ErrorLogsModel {
+                              Application    = Assembly.GetExecutingAssembly().GetName().Name,
+                              Controller     = GetType().Name,
+                              CurrentAction  = m.Name.Split('>')[0].TrimStart('<'),
+                              ErrorCode      = ErrorCode,
+                              Message        = message,
+                              SourceFile     = sourceFile,
+                              LineNumber     = trace.GetFrame(0).GetFileLineNumber(),
+                              StackTrace     = ex.ToString(),
+                              Method         = m.Name.Split('>')[0].TrimStart('<')
+                         }, ex);
                     }
                     return new GenericResponseModel<E>() {
                          Code                = string.IsNullOrEmpty(ErrorMessage) ? Enums.CodeStatus.Success : Enums.CodeStatus.Error,

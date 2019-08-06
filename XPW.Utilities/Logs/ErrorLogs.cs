@@ -7,13 +7,10 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Logs {
-     public class ErrorLogs {
+     public static class ErrorLogs {
           public static string Write(ErrorLogsModel log, Exception exception) {
-               string fileName = DateTime.Now.ToString("HHmmss") + ".json";
+               string fileName = DateTime.Now.ToString("HH") + ".json";
                try {
-                    StackTrace trace    = new StackTrace(exception, true);
-                    string sourceFile   = trace.GetFrame(0).GetFileName();
-                    int lineNumber      = trace.GetFrame(0).GetFileLineNumber();
                     string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                     if (!Directory.Exists(FileLocation)) {
                          Directory.CreateDirectory(FileLocation);
@@ -23,9 +20,6 @@ namespace XPW.Utilities.Logs {
                          file.Close();
                          file.Dispose();
                     }
-                    log.SourceFile = sourceFile;
-                    log.LineNumber = lineNumber;
-                    log.StackTrace = exception.ToString();
                     List<ErrorLogsModel> logs = Reader<ErrorLogsModel>.JsonReaderList(FileLocation + "\\" + fileName);
                     if (logs == null) {
                          logs = new List<ErrorLogsModel>();
