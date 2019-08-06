@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace XPW.Utilities.Functions {
@@ -31,6 +33,15 @@ namespace XPW.Utilities.Functions {
                         RegexOptions.IgnoreCase,
                         TimeSpan.FromMilliseconds(250));
                } catch (RegexMatchTimeoutException) {
+                    return false;
+               }
+          }
+          public static bool CheckFolderPermission(string folderPath) {
+               DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+               try {
+                    DirectorySecurity dirAC = dirInfo.GetAccessControl(AccessControlSections.All);
+                    return true;
+               } catch (PrivilegeNotHeldException) {
                     return false;
                }
           }

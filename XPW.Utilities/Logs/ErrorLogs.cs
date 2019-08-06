@@ -9,6 +9,10 @@ using XPW.Utilities.UtilityModels;
 namespace XPW.Utilities.Logs {
      public static class ErrorLogs {
           public static string Write(ErrorLogsModel log, Exception exception) {
+               bool saveError = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveError"] == null ? "false" : ConfigurationManager.AppSettings["SaveError"].ToString());
+               if (!saveError) {
+                    return "Done";
+               }
                string fileName = DateTime.Now.ToString("HH") + ".json";
                try {
                     string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
@@ -38,6 +42,10 @@ namespace XPW.Utilities.Logs {
                }
           }
           public static List<ErrorLogsModel> Read(string fileName) {
+               bool saveError = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveError"] == null ? "false" : ConfigurationManager.AppSettings["SaveError"].ToString());
+               if (!saveError) {
+                    return new List<ErrorLogsModel>();
+               }
                try {
                     string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                     if (!Directory.Exists(FileLocation)) {

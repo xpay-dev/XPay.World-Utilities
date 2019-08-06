@@ -37,7 +37,7 @@ namespace XPW.Utilities.Filtering {
                          Code               = CodeStatus.InvalidInput,
                          CodeStatus         = CodeStatus.InvalidInput.ToString(),
                          ErrorMessage       = new ErrorMessage() {
-                              ErrNumber     = "01",
+                              ErrNumber     = "800.9",
                               Details       = modelErrors,
                               Message       = CodeStatus.InvalidInput.ToString(),
                          }, ReferenceObject = null

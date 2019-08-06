@@ -3,7 +3,6 @@ using XPW.Utilities.Enums;
 
 namespace XPW.Utilities.UtilityModels {
      public class ErrorLogsModel {
-
           public ErrorLogsModel() {
                Id = Guid.NewGuid();
                DateCreated = DateTime.Now;

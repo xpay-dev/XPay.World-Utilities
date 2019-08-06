@@ -199,3 +199,4 @@ namespace XPW.Utilities.BaseContextManagement {
           public new virtual void Dispose() => base.Dispose();
      }
 }
+
