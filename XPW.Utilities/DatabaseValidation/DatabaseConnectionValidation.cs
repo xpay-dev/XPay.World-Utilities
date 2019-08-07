@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using XPW.Utilities.Enums;
+using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.DatabaseValidation {
@@ -46,12 +47,18 @@ namespace XPW.Utilities.DatabaseValidation {
                          Code = CodeStatus.DBError,
                          CodeStatus = CodeStatus.DBError.ToString(),
                          ErrorMessage = new ErrorMessage() {
-                              ErrNumber = "01",
+                              ErrNumber = "700.2",
                               Details = details,
                               Message = CodeStatus.InvalidInput.ToString(),
                          },
                          ReferenceObject = null
                     };
+                    RequestErrorLogs.Write(new RequestErrorLogModel {
+                         ErrorCode = response.ErrorMessage.ErrNumber,
+                         ErrorType = "DatabaseConnectionValidation",
+                         Message   = response.ErrorMessage.Message,
+                         URLPath   = actionContext.Request.RequestUri.AbsoluteUri
+                    });
                     var json = JsonConvert.SerializeObject(response);
                     actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.InternalServerError, json);
                     actionContext.Response.Content = new StringContent(json, Encoding.UTF8, "application/json");

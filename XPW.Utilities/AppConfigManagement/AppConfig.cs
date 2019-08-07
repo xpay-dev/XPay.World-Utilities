@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
@@ -10,6 +11,14 @@ namespace XPW.Utilities.AppConfigManagement {
           internal List<AppConfigSettingsModel> appConfigSettings = new List<AppConfigSettingsModel>();
           public AppConfig(string location, string file) {
                fileLocation = location;
+               if (!Directory.Exists(fileLocation)) {
+                    Directory.CreateDirectory(fileLocation);
+               }
+               if (!File.Exists(fileLocation + "\\" + file)) {
+                    var configFile = File.Create(fileLocation + "\\" + file);
+                    configFile.Close();
+                    configFile.Dispose();
+               }
                appConfigSettings = Reader<AppConfigSettingsModel>.JsonReaderList(fileLocation + "\\" + file);
           }
           public TValue AppSetting<TValue>(string key, bool requiredException = false) {

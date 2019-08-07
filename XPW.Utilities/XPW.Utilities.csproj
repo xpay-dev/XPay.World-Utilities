@@ -61,6 +61,8 @@
     <Compile Include="GoogleRecaptcha\Validation.cs" />
     <Compile Include="HeaderValidations\Authentication.cs" />
     <Compile Include="HeaderValidations\Authorization.cs" />
+    <Compile Include="HeaderValidations\BaseAuthenticationServiceRepository.cs" />
+    <Compile Include="HeaderValidations\HeaderValidationDefaults.cs" />
     <Compile Include="HTTPSChecker\HTTPSValidation.cs" />
     <Compile Include="IPWhiteListing\IPAuthorization.cs" />
     <Compile Include="Logs\ErrorLogs.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="TokenValidationManagement\TokenUrlValidation.cs" />
     <Compile Include="UtilityModels\APICallManagementModel.cs" />
     <Compile Include="UtilityModels\AppConfigSettingsModel.cs" />
+    <Compile Include="UtilityModels\BaseAuthenticationModel.cs" />
     <Compile Include="UtilityModels\EmailManagementModel.cs" />
     <Compile Include="UtilityModels\ErrorLogsModel.cs" />
     <Compile Include="UtilityModels\GenericResponseModel.cs" />

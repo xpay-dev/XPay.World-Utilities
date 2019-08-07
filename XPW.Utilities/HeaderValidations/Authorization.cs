@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
@@ -10,37 +9,35 @@ using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using XPW.Utilities.AppConfigManagement;
-using XPW.Utilities.Enums;
-using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.HeaderValidations {
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class Authorization : AuthorizationFilterAttribute {
           internal static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
-          internal bool? Active = appConfigManager.AppSetting<bool>("RequiredAuthorization");
+          internal bool Active = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveAuthorization"] == null ? "false" : ConfigurationManager.AppSettings["ActiveAuthorization"].ToString());
           public Authorization() { }
           public Authorization(bool active) {
                Active = active;
           }
           public override void OnAuthorization(HttpActionContext actionContext) {
-               if (Active.HasValue && Active.Value) {
+               if (Active) {
                     var identity = ParseAuthorizationHeader(actionContext);
                     if (identity == null) {
                          Challenge(actionContext);
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return;
                     }
                     if (!OnAuthorizeUser(identity.Name, identity.Password, actionContext)) {
                          Challenge(actionContext);
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return;
                     }
                     if (!AuthenticationBase64Filter.OnAuthorization(identity.Name, identity.Password, actionContext)) {
                          Challenge(actionContext);
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return;
                     }
                     var principal = new GenericPrincipal(identity, null);
@@ -78,7 +75,7 @@ namespace XPW.Utilities.HeaderValidations {
           void Challenge(HttpActionContext actionContext) {
                _ = actionContext.Request.RequestUri.DnsSafeHost;
                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-               actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+               actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
           }
           public class BasicAuthenticationIdentity : GenericIdentity {
                public BasicAuthenticationIdentity(string name, string password) : base(name, "Basic") {
@@ -97,25 +94,25 @@ namespace XPW.Utilities.HeaderValidations {
                     if (string.IsNullOrEmpty(username)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (username != authUsername) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (string.IsNullOrEmpty(password)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (password != authPassword) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     return true;
@@ -124,44 +121,28 @@ namespace XPW.Utilities.HeaderValidations {
                     if (string.IsNullOrEmpty(username)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (username != authUsername) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (string.IsNullOrEmpty(password)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     if (password != authPassword) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
                     return true;
-               }
-          }
-          internal class DefaultResponse {
-               internal static string Error() {
-                    var details = new List<string> {
-                    "Unauthorized access"
-                };
-                    return JsonConvert.SerializeObject(new GenericResponseModel {
-                         Code = CodeStatus.Unauthorized,
-                         CodeStatus = CodeStatus.Unauthorized.ToString(),
-                         ErrorMessage = new ErrorMessage {
-                              ErrNumber = "01",
-                              Details = details,
-                              Message = HttpStatusCode.Unauthorized.ToString()
-                         }, ReferenceObject = null
-                    });
                }
           }
      }

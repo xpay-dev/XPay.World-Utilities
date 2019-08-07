@@ -7,6 +7,7 @@ using System.Text;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using XPW.Utilities.Enums;
+using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Filtering {
@@ -37,11 +38,17 @@ namespace XPW.Utilities.Filtering {
                          Code = CodeStatus.InvalidInput,
                          CodeStatus = CodeStatus.InvalidInput.ToString(),
                          ErrorMessage = new ErrorMessage() {
-                              ErrNumber = "800.9",
+                              ErrNumber = "700.1",
                               Details = modelErrors,
                               Message = CodeStatus.InvalidInput.ToString(),
                          }, ReferenceObject = null
                     };
+                    RequestErrorLogs.Write(new RequestErrorLogModel {
+                         ErrorCode = response.ErrorMessage.ErrNumber,
+                         ErrorType = "RequestFiltering",
+                         Message   = response.ErrorMessage.Message,
+                         URLPath   = actionContext.Request.RequestUri.AbsoluteUri
+                    });
                     var json = JsonConvert.SerializeObject(response);
                     actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, json);
                     actionContext.Response.Content = new StringContent(json, Encoding.UTF8, "application/json");

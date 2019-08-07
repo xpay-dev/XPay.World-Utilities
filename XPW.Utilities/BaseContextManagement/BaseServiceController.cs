@@ -38,12 +38,12 @@ namespace XPW.Utilities.BaseContextManagement {
           internal interface IBaseRepo : IBaseRepository<E> { }
           public class BaseServices : BaseService<E, BaseRepo> { }
           public BaseServices Service = new BaseServices();
+          public static readonly string key = ConfigurationManager.AppSettings["DefaultKey"].ToString();
+          public static readonly string iv = ConfigurationManager.AppSettings["DefaultIV"].ToString();
           public HashUtilityManagement crypto = new HashUtilityManagement(key, iv);
           public string ErrorCode = string.Empty;
           public string ErrorMessage = string.Empty;
           public List<string> ErrorDetails = new List<string>();
-          public static readonly string key = ConfigurationManager.AppSettings["DefaultKey"].ToString();
-          public static readonly string iv = ConfigurationManager.AppSettings["DefaultIV"].ToString();
           [Route("get-all")]
           [HttpGet]
           public virtual async Task<GenericResponseListModel<E>> GetAll() {
