@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using XPW.Utilities.Enums;
 
 namespace XPW.Utilities.BaseContext {
      public class BaseModelGuid {
           public BaseModelGuid() {
-               Id          = Guid.NewGuid();
+               Id = Guid.NewGuid();
                DateCreated = DateTime.Now;
           }
           [Key]

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
@@ -9,6 +8,12 @@ using XPW.Utilities.UtilityModels;
 namespace XPW.Utilities.Logs {
      public static class ErrorLogs {
           public static string Write(ErrorLogsModel log, Exception exception) {
+               if (log is null) {
+                    return "Done";
+               }
+               if (exception is null) {
+                    return "Done";
+               }
                bool saveError = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveError"] == null ? "false" : ConfigurationManager.AppSettings["SaveError"].ToString());
                if (!saveError) {
                     return "Done";
@@ -34,14 +39,13 @@ namespace XPW.Utilities.Logs {
                     logs.Add(log);
                     return Writer<ErrorLogsModel>.JsonWriterList(logs, FileLocation + "\\" + fileName);
                } catch (Exception ex) {
-                    var st = new StackTrace(ex, true);
-                    var frame = st.GetFrame(0);
-                    var line = frame.GetFileLineNumber();
-                    var message = ex.Message + st + "=========" + line;
                     throw ex;
                }
           }
           public static List<ErrorLogsModel> Read(string fileName) {
+               if (string.IsNullOrEmpty(fileName)) {
+                    return new List<ErrorLogsModel>();
+               }
                bool saveError = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveError"] == null ? "false" : ConfigurationManager.AppSettings["SaveError"].ToString());
                if (!saveError) {
                     return new List<ErrorLogsModel>();

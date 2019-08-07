@@ -7,7 +7,6 @@ using System.Text;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using XPW.Utilities.AppConfigManagement;
 using XPW.Utilities.Enums;
 using XPW.Utilities.UtilityModels;
 

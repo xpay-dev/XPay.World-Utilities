@@ -41,7 +41,7 @@ namespace XPW.Utilities.NoSQL {
                }
           }
           public static async Task<string> JsonWriterAsync(T entity, string path) {
-               return await Task.Run(() => { 
+               return await Task.Run(() => {
                     try {
                          StreamWriter readFile = new StreamWriter(path);
                          readFile.Close();
@@ -61,7 +61,7 @@ namespace XPW.Utilities.NoSQL {
           }
           public static async Task<string> JsonWriterListAsync(List<T> entity, string path) {
                return await Task.Run(() => {
-                         try {
+                    try {
                          StreamWriter readFile = new StreamWriter(path);
                          readFile.Close();
                          readFile.Dispose();

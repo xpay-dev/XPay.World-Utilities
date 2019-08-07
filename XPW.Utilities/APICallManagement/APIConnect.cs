@@ -75,7 +75,7 @@ namespace XPW.Utilities.APICallManagement {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
                          } else if (APICallMethod == APIRequestMethod.Put) {
-                              using (var response = await httpClient.PutAsync(request.Path,content)) {
+                              using (var response = await httpClient.PutAsync(request.Path, content)) {
                                    responseData = await response.Content.ReadAsStringAsync();
                               }
                          } else if (APICallMethod == APIRequestMethod.Delete) {

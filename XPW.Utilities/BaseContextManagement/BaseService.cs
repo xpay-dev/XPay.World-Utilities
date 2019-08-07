@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
@@ -35,43 +34,43 @@ namespace XPW.Utilities.BaseContext {
                }
           }
 
-          public virtual void Save(T entity) {
+          public virtual async Task SaveAsync(T entity) {
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Add(entity);
                     Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Create
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision = new RevisionLog<T> {
+                         Context = contextName,
+                         Entity = new T().GetType().Name,
+                         Revisions = entity,
+                         RevisionType = Enums.RevisionType.Create
                     };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
+                    await RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
-          
-          public virtual T SaveReturn(T entity) {
+
+          public virtual async Task<T> SaveReturnAsync(T entity) {
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     entity = Repository.AddReturn(entity);
                     Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Create
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision = new RevisionLog<T> {
+                         Context = contextName,
+                         Entity = new T().GetType().Name,
+                         Revisions = entity,
+                         RevisionType = Enums.RevisionType.Create
                     };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
+                    await RevisionLogs<T>.Write(revision, contextName, fileName);
                     return entity;
                } catch (Exception ex) {
                     throw ex;
@@ -85,16 +84,16 @@ namespace XPW.Utilities.BaseContext {
                     }
                     Repository.Add(entities);
                     Repository.Save();
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Create
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Create
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                } catch (Exception ex) {
                     throw ex;
@@ -107,17 +106,17 @@ namespace XPW.Utilities.BaseContext {
                          throw new ArgumentNullException("entities");
 
                     entities = Repository.AddReturn(entities);
-                    Repository.Save();          
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Create
+                    Repository.Save();
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Create
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                     return entities;
                } catch (Exception ex) {
@@ -125,43 +124,43 @@ namespace XPW.Utilities.BaseContext {
                }
           }
 
-          public virtual void Update(T entity) {
+          public virtual async Task UpdateAsync(T entity) {
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     Repository.Edit(entity);
                     Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Update
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision = new RevisionLog<T> {
+                         Context = contextName,
+                         Entity = new T().GetType().Name,
+                         Revisions = entity,
+                         RevisionType = Enums.RevisionType.Update
                     };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
+                    await RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
-          public virtual T UpdateReturn(T entity) {
+          public virtual async Task<T> UpdateReturnAsync(T entity) {
                try {
                     if (entity == null)
                          throw new ArgumentNullException("entity");
 
                     entity = Repository.EditReturn(entity);
                     Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Update
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision = new RevisionLog<T> {
+                         Context = contextName,
+                         Entity = new T().GetType().Name,
+                         Revisions = entity,
+                         RevisionType = Enums.RevisionType.Update
                     };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
+                    await RevisionLogs<T>.Write(revision, contextName, fileName);
                     return entity;
                } catch (Exception ex) {
                     throw ex;
@@ -175,16 +174,16 @@ namespace XPW.Utilities.BaseContext {
 
                     Repository.Edit(entities);
                     Repository.Save();
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Update
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Update
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                } catch (Exception ex) {
                     throw ex;
@@ -198,16 +197,16 @@ namespace XPW.Utilities.BaseContext {
 
                     entities = Repository.EditReturn(entities);
                     Repository.Save();
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Update
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Update
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                     return entities;
                } catch (Exception ex) {
@@ -215,125 +214,135 @@ namespace XPW.Utilities.BaseContext {
                }
           }
 
-          public virtual void Delete(Guid id) {
-               try {
-                    var entity = Get(id);
-                    Repository.Delete(id);
-                    Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Delete
-                    };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
-               } catch (Exception ex) {
-                    throw ex;
-               }
+          public virtual async Task DeleteAsync(Guid id) {
+               await Task.Run(async () => {
+                    try {
+                         var entity = Get(id);
+                         Repository.Delete(id);
+                         Repository.Save();
+                         string contextName = Repository.ContextName();
+                         string fileName = new T().GetType().Name + ".json";
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = await entity,
+                              RevisionType = Enums.RevisionType.Delete
+                         };
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
+                    } catch (Exception ex) {
+                         throw ex;
+                    }
+               });
           }
 
-          public virtual void Delete(IEnumerable<Guid> ids) {
+          public virtual async Task DeleteAsync(IEnumerable<Guid> ids) {
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
-                         entities.Add(Get(id));
+                         entities.Add(await Get(id));
                          Repository.Delete(id);
                     }
                     Repository.Save();
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Delete
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Delete
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
-          public virtual void Delete(int id) {
+          public virtual async Task DeleteAsync(int id) {
                try {
-                    var entity = Get(id);
+                    var entity = await Get(id);
                     Repository.Delete(id);
                     Repository.Save();
-                    string contextName       = Repository.ContextName();
-                    string fileName          = new T().GetType().Name + ".json";
-                    RevisionLog<T> revision  = new RevisionLog<T> {
-                         Context             = contextName,
-                         Entity              = new T().GetType().Name,
-                         Revisions           = entity,
-                         RevisionType        = Enums.RevisionType.Delete
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    RevisionLog<T> revision = new RevisionLog<T> {
+                         Context = contextName,
+                         Entity = new T().GetType().Name,
+                         Revisions = entity,
+                         RevisionType = Enums.RevisionType.Delete
                     };
-                    RevisionLogs<T>.Write(revision, contextName, fileName);
+                    await RevisionLogs<T>.Write(revision, contextName, fileName);
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
-          public virtual void Delete(IEnumerable<int> ids) {
+          public virtual async Task DeleteAsync(IEnumerable<int> ids) {
                try {
                     var entities = new List<T>();
                     foreach (var id in ids) {
-                         entities.Add(Get(id));
+                         entities.Add(await Get(id));
                          Repository.Delete(id);
                     }
                     Repository.Save();
-                    string contextName            = Repository.ContextName();
-                    string fileName               = new T().GetType().Name + ".json";
-                    entities.ToList().ForEach(a   => {
-                         RevisionLog<T> revision  = new RevisionLog<T> {
-                              Context             = contextName,
-                              Entity              = new T().GetType().Name,
-                              Revisions           = a,
-                              RevisionType        = Enums.RevisionType.Delete
+                    string contextName = Repository.ContextName();
+                    string fileName = new T().GetType().Name + ".json";
+                    entities.ToList().ForEach(async a => {
+                         RevisionLog<T> revision = new RevisionLog<T> {
+                              Context = contextName,
+                              Entity = new T().GetType().Name,
+                              Revisions = a,
+                              RevisionType = Enums.RevisionType.Delete
                          };
-                         RevisionLogs<T>.Write(revision, contextName, fileName);
+                         await RevisionLogs<T>.Write(revision, contextName, fileName);
                     });
                } catch (Exception ex) {
                     throw ex;
                }
           }
 
-          public virtual T Get(Guid id) {
-               try {
-                    return Repository.Find(id);
-               } catch (Exception ex) {
-                    throw ex;
-               }
+          public virtual async Task<T> Get(Guid id) {
+               return await Task.Run(() => {
+                    try {
+                         return Repository.Find(id);
+                    } catch (Exception ex) {
+                         throw ex;
+                    }
+               });
           }
 
-          public virtual T Get(int id) {
-               try {
-                    return Repository.Find(id);
-               } catch (Exception ex) {
-                    throw ex;
-               }
+          public virtual async Task<T> Get(int id) {
+               return await Task.Run(() => {
+                    try {
+                         return Repository.Find(id);
+                    } catch (Exception ex) {
+                         throw ex;
+                    }
+               });
           }
 
-          public virtual T Get(Expression<Func<T, bool>> where) {
-               try {
-                    return Repository.All()
-                               .Where(where)
-                               .FirstOrDefault();
-               } catch (Exception ex) {
-                    throw ex;
-               }
+          public virtual async Task<T> GetAsync(Expression<Func<T, bool>> where) {
+               return await Task.Run(() => {
+                    try {
+                         return Repository.All()
+                                    .Where(where)
+                                    .FirstOrDefault();
+                    } catch (Exception ex) {
+                         throw ex;
+                    }
+               });
           }
 
-          public virtual IEnumerable<T> GetAllBy(Expression<Func<T, bool>> where) {
-               try {
-                    return Repository.All()
-                                .Where(where);
-               } catch (Exception ex) {
-                    throw ex;
-               }
+          public virtual async Task<IEnumerable<T>> GetAllByAsync(Expression<Func<T, bool>> where) {
+               return await Task.Run(() => {
+                    try {
+                         return Repository.All()
+                                          .Where(where);
+                    } catch (Exception ex) {
+                         throw ex;
+                    }
+               });
           }
 
           public virtual IEnumerable<T> GetAll() {

@@ -12,7 +12,7 @@ namespace XPW.Utilities.BaseContext {
      public abstract class BaseRepository<C, T> : IBaseRepository<T>, IDisposable
         where C : DbContext, new()
         where T : class, new() {
-          public C Context { get; set; }          = Activator.CreateInstance<C>();
+          public C Context { get; set; } = Activator.CreateInstance<C>();
           private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(15);
           public BaseRepository() {
                try {
@@ -323,16 +323,16 @@ namespace XPW.Utilities.BaseContext {
                     throw ex;
                }
           }
-          #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
           public virtual async Task SaveAsync() {
                DbContextTransaction trans = Context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
                try {
                     Task task = Task.Run(() => {
-                              Context.SaveChanges();
-                              Context.SaveChangesAsync();
-                         });
-                         if (!task.Wait(TimeSpan)) {
-                              throw new Exception("Connecting to database was taking to long, please try again later");
+                         Context.SaveChanges();
+                         Context.SaveChangesAsync();
+                    });
+                    if (!task.Wait(TimeSpan)) {
+                         throw new Exception("Connecting to database was taking to long, please try again later");
                     }
                } catch (Exception ex) {
                     trans.Rollback();
@@ -432,7 +432,7 @@ namespace XPW.Utilities.BaseContext {
           void Delete(Guid id);
           void Save();
           Task SaveAsync();
-          #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
           void Dispose();
 #         pragma warning restore CS0108 // Member hides inherited member; missing new keyword
           T StoredProcedure(string storedProcName, List<StoredProcedureParam> param);
