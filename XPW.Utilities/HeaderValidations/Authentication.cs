@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
@@ -13,7 +12,7 @@ using XPW.Utilities.UtilityModels;
 namespace XPW.Utilities.HeaderValidations {
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class Authentication : AuthorizationFilterAttribute {
-          internal bool Active = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveAuthorization"] == null ? "false" : ConfigurationManager.AppSettings["ActiveAuthorization"].ToString());
+          internal bool Active = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveAuthentication"] == null ? "false" : ConfigurationManager.AppSettings["ActiveAuthentication"].ToString());
           public Authentication() { }
           public Authentication(bool active) {
                Active = active;
@@ -53,23 +52,18 @@ namespace XPW.Utilities.HeaderValidations {
           protected virtual BasicAuthenticationIdentity ParseAuthorizationHeader(HttpActionContext actionContext) {
                string authHeader = null;
                var auth = actionContext.Request.Headers.Authorization;
-               if (auth != null && auth.Scheme == "Basic") {
+               if (auth != null && auth.Scheme == "Auth") {
                     authHeader = auth.Parameter;
                }
                if (string.IsNullOrEmpty(authHeader)) {
                     return null;
                }
+               var authentication = new BaseAuthenticationModel();
                try {
-                    byte[] bytes = Convert.FromBase64String(authHeader);
-                    authHeader = Encoding.UTF8.GetString(bytes);
-               } catch {
-                    return null;
-               }
-               var tokens = authHeader.Split('|');
-               if (tokens.Length < 2) {
-                    return null;
-               }
-               return new BasicAuthenticationIdentity(tokens[0], tokens[1]);
+                    authentication = new BaseAuthenticationServiceRepository().Get(authHeader);
+                    if (authentication == null) { return null; }
+               } catch { return null; }
+               return new BasicAuthenticationIdentity(authentication.Username, authentication.Password);
           }
           void Challenge(HttpActionContext actionContext) {
                _ = actionContext.Request.RequestUri.DnsSafeHost;
@@ -77,7 +71,7 @@ namespace XPW.Utilities.HeaderValidations {
                actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
           }
           public class BasicAuthenticationIdentity : GenericIdentity {
-               public BasicAuthenticationIdentity(string name, string password) : base(name, "Basic") {
+               public BasicAuthenticationIdentity(string name, string password) : base(name, "Auth") {
                     Password = password;
                }
                public string Password { get; set; }
@@ -85,7 +79,6 @@ namespace XPW.Utilities.HeaderValidations {
           public class AuthenticationBase64Filter : Authorization {
                public AuthenticationBase64Filter() { }
                public AuthenticationBase64Filter(bool active) : base(active) { }
-
                protected override bool OnAuthorizeUser(string username, string password, HttpActionContext actionContext) {
                     if (string.IsNullOrEmpty(username)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
@@ -93,24 +86,31 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    //if (username != authUsername) {
-                    //     _ = actionContext.Request.RequestUri.DnsSafeHost;
-                    //     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                    //     actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
-                    //     return false;
-                    //}
                     if (string.IsNullOrEmpty(password)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    //if (password != authPassword) {
-                    //     _ = actionContext.Request.RequestUri.DnsSafeHost;
-                    //     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                    //     actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
-                    //     return false;
-                    //}
+                    var authentication = new BaseAuthenticationModel();
+                    if (authentication == null) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
+                    if (username != authentication.Username) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
+                    if (password != authentication.Password) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
                     return true;
                }
                internal static bool OnAuthorization(string username, string password, HttpActionContext actionContext) {
@@ -120,24 +120,31 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    //if (username != authUsername) {
-                    //     _ = actionContext.Request.RequestUri.DnsSafeHost;
-                    //     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                    //     actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
-                    //     return false;
-                    //}
                     if (string.IsNullOrEmpty(password)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    //if (password != authPassword) {
-                    //     _ = actionContext.Request.RequestUri.DnsSafeHost;
-                    //     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                    //     actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
-                    //     return false;
-                    //}
+                    var authentication = new BaseAuthenticationModel();
+                    if (authentication == null) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
+                    if (username != authentication.Username) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
+                    if (password != authentication.Password) {
+                         _ = actionContext.Request.RequestUri.DnsSafeHost;
+                         actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                         actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
+                         return false;
+                    }
                     return true;
                }
           }
