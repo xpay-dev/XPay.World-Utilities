@@ -92,7 +92,7 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    var authentication = new BaseAuthenticationModel();
+                    var authentication = new BaseAuthenticationServiceRepository().Get(username, password);
                     if (authentication == null) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);

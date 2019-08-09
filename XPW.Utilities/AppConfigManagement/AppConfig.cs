@@ -2,28 +2,39 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using XPW.Utilities.Logs;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.AppConfigManagement {
      public class AppConfig {
-          private static string fileLocation = string.Empty;
+          private static string FileLocation = string.Empty;
           internal List<AppConfigSettingsModel> appConfigSettings = new List<AppConfigSettingsModel>();
+          private string FileName { get; set; }
           public AppConfig(string location, string file) {
-               fileLocation = location;
-               if (!Directory.Exists(fileLocation)) {
-                    Directory.CreateDirectory(fileLocation);
-               }
-               if (!File.Exists(fileLocation + "\\" + file)) {
-                    var configFile = File.Create(fileLocation + "\\" + file);
-                    configFile.Close();
-                    configFile.Dispose();
-               }
-               appConfigSettings = Reader<AppConfigSettingsModel>.JsonReaderList(fileLocation + "\\" + file);
+               FileLocation = location;
+               FileName = file;
           }
-          public TValue AppSetting<TValue>(string key, bool requiredException = false) {
+          public TValue AppSetting<TValue>(string key, bool autoCreate = false, AppConfigSettingsModel value = null, bool requiredException = false) {
                try {
+                    if (!Directory.Exists(FileLocation)) {
+                         Directory.CreateDirectory(FileLocation);
+                    }
+                    if (!File.Exists(FileLocation + "\\" + FileName)) {
+                         var configFile = File.Create(FileLocation + "\\" + FileName);
+                         configFile.Close();
+                         configFile.Dispose();
+                    }
+                    appConfigSettings = Reader<AppConfigSettingsModel>.JsonReaderList(FileLocation + "\\" + FileName);
+                    if (appConfigSettings == null) {
+                         appConfigSettings = new List<AppConfigSettingsModel>();
+                    }
                     StringValueChecker(key);
+                    if (autoCreate) {
+                         value.Name = key;
+                         appConfigSettings.Add(value);
+                         _ = Writer<AppConfigSettingsModel>.JsonWriterList(appConfigSettings, FileLocation + "\\" + FileName);
+                    }
                     AppConfigSettingsModel appSetting = appConfigSettings.Where(a => a.Name.Equals(key, StringComparison.CurrentCulture)).FirstOrDefault();
                     if (appSetting == null) {
                          throw new Exception("No Application Settings Found");
@@ -33,6 +44,11 @@ namespace XPW.Utilities.AppConfigManagement {
                     if (!requiredException) {
                          return (TValue)Convert.ChangeType(null, typeof(TValue));
                     }
+                    ErrorLogs.Write(new ErrorLogsModel {
+                         Application = "Utilities",
+                         Message     = "Error on writing files",
+                         StackTrace  = ex.ToString()
+                    }, ex);
                     throw ex;
                }
           }

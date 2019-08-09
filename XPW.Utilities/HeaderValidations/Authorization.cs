@@ -9,6 +9,7 @@ using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using XPW.Utilities.AppConfigManagement;
+using XPW.Utilities.CryptoHashingManagement;
 
 namespace XPW.Utilities.HeaderValidations {
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
@@ -34,7 +35,7 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return;
                     }
-                    if (!AuthenticationBase64Filter.OnAuthorization(identity.Name, identity.Password, actionContext)) {
+                    if (!AuthorizationFilter.OnAuthorization(identity.Name, identity.Password, actionContext)) {
                          Challenge(actionContext);
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
@@ -83,12 +84,12 @@ namespace XPW.Utilities.HeaderValidations {
                }
                public string Password { get; set; }
           }
-          public class AuthenticationBase64Filter : Authorization {
-               public AuthenticationBase64Filter() { }
-               public AuthenticationBase64Filter(bool active) : base(active) { }
+          public class AuthorizationFilter : Authorization {
+               public AuthorizationFilter() { }
+               public AuthorizationFilter(bool active) : base(active) { }
                internal new static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
-               private static string authUsername = appConfigManager.AppSetting<string>("APIAuthorizationUsername");
-               private static string authPassword = appConfigManager.AppSetting<string>("APIAuthorizationPassword");
+               private static string authUsername = appConfigManager.AppSetting<string>("APIAuthorizationUsername", true, new UtilityModels.AppConfigSettingsModel{ Value = "AuthAccess", Group = "Security" });
+               private static string authPassword = appConfigManager.AppSetting<string>("APIAuthorizationPassword", true, new UtilityModels.AppConfigSettingsModel { Value = new HashUtilityManagement().EncodingToBase64("patCHES214#"), Group = "Security" });
 
                protected override bool OnAuthorizeUser(string username, string password, HttpActionContext actionContext) {
                     if (string.IsNullOrEmpty(username)) {
@@ -109,7 +110,7 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    if (password != authPassword) {
+                    if (password != new HashUtilityManagement().DecodingFromBase64(authPassword)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
@@ -136,7 +137,7 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    if (password != authPassword) {
+                    if (password != new HashUtilityManagement().DecodingFromBase64(authPassword)) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");

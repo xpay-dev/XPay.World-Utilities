@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Hosting;
+using XPW.Utilities.CryptoHashingManagement;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.HeaderValidations {
      public class BaseAuthenticationServiceRepository {
+#pragma warning disable IDE0044 // Add readonly modifier
           private string FileName;
+#pragma warning restore IDE0044 // Add readonly modifier
+#pragma warning disable IDE0044 // Add readonly modifier
           private string FileLocation;
+#pragma warning restore IDE0044 // Add readonly modifier
           public BaseAuthenticationServiceRepository() {
                string FileLocation = HostingEnvironment.ApplicationPhysicalPath + "App_Authentications";
                string FileName = new BaseAuthenticationModel().GetType().Name + ".json";
@@ -41,7 +45,7 @@ namespace XPW.Utilities.HeaderValidations {
                record = records.Where(a => a.Username.Equals(decodedValues.Item2, StringComparison.CurrentCulture)).FirstOrDefault();
                if (record != null) { return null; }
                if (record.Tag != Enums.Status.Active) { return null; }
-               if (record.Password != DecodingFromBase64(decodedValues.Item2)) { return null; }
+               if (record.Password != new HashUtilityManagement().DecodingFromBase64(decodedValues.Item2)) { return null; }
                return record;
           }
           public BaseAuthenticationModel Get(string username, string password) {
@@ -51,8 +55,8 @@ namespace XPW.Utilities.HeaderValidations {
                record = records.Where(a => a.Username.Equals(username, StringComparison.CurrentCulture)).FirstOrDefault();
                if (record != null) { return null; }
                if (record.Tag != Enums.Status.Active) { return null; }
-               if (record.Password != DecodingFromBase64(password)) { return null; }
-               record.Password = DecodingFromBase64(password);
+               if (record.Password != new HashUtilityManagement().DecodingFromBase64(password)) { return null; }
+               record.Password = new HashUtilityManagement().DecodingFromBase64(password);
                return record;
           }
           public async Task<BaseAuthenticationModel> Get(Guid id) {
@@ -65,6 +69,7 @@ namespace XPW.Utilities.HeaderValidations {
                });
           }
           public async Task<BaseAuthenticationModel> Save(BaseAuthenticationModel entity) {
+               entity.Password = new HashUtilityManagement().EncodingToBase64(entity.Password);
                return await Task.Run(async () => {
                     List<BaseAuthenticationModel> records = new List<BaseAuthenticationModel>();
                     records = await Reader<BaseAuthenticationModel>.JsonReaderListAsync(FileLocation + "\\" + FileName);
@@ -108,18 +113,8 @@ namespace XPW.Utilities.HeaderValidations {
                     return record;
                });
           }
-          private string DecodingFromBase64(string base64String) {
-               byte[] bytes = Convert.FromBase64String(base64String);
-               string returnValue = Encoding.UTF8.GetString(bytes);
-               return returnValue;
-          }
-          private string EncodingToBase64(string baseString) {
-               byte[] bytes = Encoding.UTF8.GetBytes(baseString);
-               string returnValue = Convert.ToBase64String(bytes);
-               return returnValue;
-          }
           private Tuple<string, string> GetValues(string base64String) {
-               var decoded = DecodingFromBase64(base64String);
+               var decoded = new HashUtilityManagement().DecodingFromBase64(base64String);
                var values  = decoded.Split('|');
                if (values.Length < 2) {
                     return new Tuple<string, string>(string.Empty, string.Empty);

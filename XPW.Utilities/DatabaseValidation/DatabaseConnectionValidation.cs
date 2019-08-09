@@ -21,7 +21,7 @@ namespace XPW.Utilities.DatabaseValidation {
      public class DatabaseConnectionValidation : ActionFilterAttribute {
           private readonly string connection;
           public DatabaseConnectionValidation(string testConnection) { connection = testConnection; }
-          private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(15);
+          private TimeSpan TimeSpan { get; set; } = TimeSpan.FromSeconds(7);
           internal Tuple<bool, string> CheckDatabaseConnection() {
                try {
                     var Context = new DatabaseTestConnection(connection);
@@ -49,7 +49,7 @@ namespace XPW.Utilities.DatabaseValidation {
                          ErrorMessage = new ErrorMessage() {
                               ErrNumber = "700.2",
                               Details = details,
-                              Message = CodeStatus.InvalidInput.ToString(),
+                              Message = CodeStatus.DBError.ToString(),
                          },
                          ReferenceObject = null
                     };
