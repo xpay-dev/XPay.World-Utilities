@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using XPW.Utilities.Enums;
@@ -6,6 +7,7 @@ using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.HeaderValidations {
+     [Serializable]
      public class HeaderValidationDefaults {
           internal static string ErrorResponse(string url) {
                var details = new List<string> {

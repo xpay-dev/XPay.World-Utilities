@@ -7,6 +7,7 @@ using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContext {
+     [Serializable]
      public abstract class BaseService<T> : IDisposable where T : class, new() {
           T _repository;
           protected T Repository() {
@@ -22,6 +23,7 @@ namespace XPW.Utilities.BaseContext {
           }
      }
 
+     [Serializable]
      public abstract class BaseService<T, TR> where TR : IBaseRepository<T>, IDisposable, new() where T : class, new() {
           #region Repository
           private TR _Repository;

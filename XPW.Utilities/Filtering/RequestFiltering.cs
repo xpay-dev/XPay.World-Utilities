@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,6 +12,7 @@ using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Filtering {
+     [Serializable]
      public class RequestFiltering : ActionFilterAttribute {
           public override void OnActionExecuting(HttpActionContext actionContext) {
                var modelState = actionContext.ModelState;

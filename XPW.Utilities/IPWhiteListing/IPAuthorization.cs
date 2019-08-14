@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,23 +11,24 @@ using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using XPW.Utilities.Enums;
+using XPW.Utilities.Logs;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.IPWhiteListing {
+     [Serializable]
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class IPAuthorization : AuthorizationFilterAttribute {
-          internal static readonly AppConfigManagement.AppConfig appConfigManager = new AppConfigManagement.AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
-          internal bool? Active = appConfigManager.AppSetting<bool>("RequiredIPAuthorization");
+          internal bool Active = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveIPBlackListing"] == null ? "false" : ConfigurationManager.AppSettings["ActiveIPBlackListing"].ToString());
           public IPAuthorization() { }
           public IPAuthorization(bool active) { Active = active; }
           public override void OnAuthorization(HttpActionContext actionContext) {
-               if (Active.HasValue && Active.Value) {
+               if (Active) {
                     var identity = ValidateRequestIP(actionContext);
                     if (!identity) {
                          Challenge(actionContext);
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+                         actionContext.Response.Content = new StringContent(DefaultResponse.Error(actionContext), Encoding.UTF8, "application/json");
                          return;
                     }
                     base.OnAuthorization(actionContext);
@@ -53,22 +55,29 @@ namespace XPW.Utilities.IPWhiteListing {
           void Challenge(HttpActionContext actionContext) {
                _ = actionContext.Request.RequestUri.DnsSafeHost;
                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-               actionContext.Response.Content = new StringContent(DefaultResponse.Error(), Encoding.UTF8, "application/json");
+               actionContext.Response.Content = new StringContent(DefaultResponse.Error(actionContext), Encoding.UTF8, "application/json");
           }
           internal class DefaultResponse {
-               internal static string Error() {
+               internal static string Error(HttpActionContext actionContext) {
                     var details = new List<string> {
-                    "Unauthorized access"
-                };
-                    return JsonConvert.SerializeObject(new GenericResponseModel {
+                         "Unauthorized access"
+                    };
+                    var response = new GenericResponseModel {
                          Code = CodeStatus.Unauthorized,
                          CodeStatus = CodeStatus.Unauthorized.ToString(),
                          ErrorMessage = new ErrorMessage {
-                              ErrNumber = "01",
+                              ErrNumber = "700.5",
                               Details = details,
                               Message = HttpStatusCode.Unauthorized.ToString()
                          }, ReferenceObject = null
+                    };
+                    RequestErrorLogs.Write(new RequestErrorLogModel {
+                         ErrorCode = response.ErrorMessage.ErrNumber,
+                         ErrorType = "IPBlackListing",
+                         Message = response.ErrorMessage.Message,
+                         URLPath = actionContext.Request.RequestUri.AbsoluteUri
                     });
+                    return JsonConvert.SerializeObject(response);
                }
           }
           public string GetRegisteredIP(string ipAddress, string port) {
@@ -76,7 +85,8 @@ namespace XPW.Utilities.IPWhiteListing {
                     var registeredIps = Reader<IPWhiteListingModel>.JsonReaderList(HostingEnvironment.ApplicationPhysicalPath + "App_Settings\\ipWhiteList.json");
                     if (registeredIps.Count == 0) { return string.Empty; }
                     if (string.IsNullOrEmpty(ipAddress)) { throw new Exception("Value cannot be null"); }
-                    if (appConfigManager.AppSetting<bool>("RequiredIPPortAuthorization")) {
+                    bool activePort = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveIPBlackListingPort"] == null ? "false" : ConfigurationManager.AppSettings["ActiveIPBlackListingPort"].ToString());
+                    if (activePort) {
                          if (string.IsNullOrEmpty(port)) {
                               throw new Exception("Value cannot be null");
                          }
@@ -84,7 +94,7 @@ namespace XPW.Utilities.IPWhiteListing {
                     List<IPWhiteListingModel> registeredIpAddresses = registeredIps.Where(a => a.IPAddress.Equals(ipAddress, StringComparison.CurrentCulture)).ToList();
                     if (registeredIpAddresses.Count == 0) { return string.Empty; }
                     if (registeredIps == null) { return string.Empty; }
-                    if (appConfigManager.AppSetting<bool>("RequiredIPPortAuthorization")) {
+                    if (activePort) {
                          var registeredIp = registeredIpAddresses.Where(a => a.Port.Equals(port, StringComparison.CurrentCulture)).FirstOrDefault();
                          if (registeredIp == null) {
                               return string.Empty;

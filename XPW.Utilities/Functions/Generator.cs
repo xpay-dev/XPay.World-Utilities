@@ -2,6 +2,7 @@
 using System.Text;
 
 namespace XPW.Utilities.Functions {
+     [Serializable]
      public class Generator {
           public static string ConvertHexaToString(string hexa) {
                byte[] data = FromHex(hexa);

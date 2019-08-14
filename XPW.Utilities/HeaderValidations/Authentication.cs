@@ -10,6 +10,7 @@ using System.Web.Http.Filters;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.HeaderValidations {
+     [Serializable]
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class Authentication : AuthorizationFilterAttribute {
           internal bool Active = Convert.ToBoolean(ConfigurationManager.AppSettings["ActiveAuthentication"] == null ? "false" : ConfigurationManager.AppSettings["ActiveAuthentication"].ToString());
@@ -60,7 +61,7 @@ namespace XPW.Utilities.HeaderValidations {
                }
                var authentication = new BaseAuthenticationModel();
                try {
-                    authentication = new BaseAuthenticationServiceRepository().Get(authHeader);
+                    authentication = new AuthenticationServiceRepository().Get(authHeader);
                     if (authentication == null) { return null; }
                } catch { return null; }
                return new BasicAuthenticationIdentity(authentication.Username, authentication.Password);
@@ -92,7 +93,7 @@ namespace XPW.Utilities.HeaderValidations {
                          actionContext.Response.Content = new StringContent(HeaderValidationDefaults.ErrorResponse(actionContext.Request.RequestUri.AbsoluteUri), Encoding.UTF8, "application/json");
                          return false;
                     }
-                    var authentication = new BaseAuthenticationServiceRepository().Get(username, password);
+                    var authentication = new AuthenticationServiceRepository().Get(username, password);
                     if (authentication == null) {
                          _ = actionContext.Request.RequestUri.DnsSafeHost;
                          actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);

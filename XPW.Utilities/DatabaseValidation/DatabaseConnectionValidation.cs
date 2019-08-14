@@ -13,11 +13,13 @@ using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.DatabaseValidation {
+     [Serializable]
      public partial class DatabaseTestConnection : DbContext {
           public DatabaseTestConnection(string testConnection)
               : base("name=" + testConnection) {
           }
      }
+     [Serializable]
      public class DatabaseConnectionValidation : ActionFilterAttribute {
           private readonly string connection;
           public DatabaseConnectionValidation(string testConnection) { connection = testConnection; }

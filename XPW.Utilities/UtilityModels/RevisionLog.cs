@@ -2,6 +2,7 @@
 using XPW.Utilities.Enums;
 
 namespace XPW.Utilities.UtilityModels {
+     [Serializable]
      public class RevisionLog<T> where T : class, new() {
           public RevisionLog() {
                DateCreated = DateTime.Now;

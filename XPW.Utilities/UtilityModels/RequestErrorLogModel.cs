@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace XPW.Utilities.UtilityModels {
+     [Serializable]
      public class RequestErrorLogModel {
           public RequestErrorLogModel() {
                Id = Guid.NewGuid();

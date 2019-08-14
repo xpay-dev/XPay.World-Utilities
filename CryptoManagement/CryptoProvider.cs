@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace CryptoManagement {
+     [Serializable]
     public class CryptoProvider {
         private static readonly string DEFAULT_HASH_ALGORITHM = "SHA512";
         private static readonly int DEFAULT_KEY_SIZE = 256;

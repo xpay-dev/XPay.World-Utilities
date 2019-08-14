@@ -6,6 +6,7 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.WhiteLabelingManagement {
+     [Serializable]
      public class CssWriter {
           private static string css = string.Empty;
           private static string json = string.Empty;

@@ -7,6 +7,7 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.AppConfigManagement {
+     [Serializable]
      public class AppConfig {
           private static string FileLocation = string.Empty;
           internal List<AppConfigSettingsModel> appConfigSettings = new List<AppConfigSettingsModel>();

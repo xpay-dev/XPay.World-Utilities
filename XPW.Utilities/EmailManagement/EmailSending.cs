@@ -7,6 +7,7 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.EmailManagement {
+     [Serializable]
      public class EmailSending {
           internal static List<EmailManagementConfiguration> emainConfigurations = new List<EmailManagementConfiguration>();
           internal static string configName = string.Empty;

@@ -7,6 +7,7 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Logs {
+     [Serializable]
      public static class RevisionLogs<T> where T : class, new() {
           public static async Task<string> Write(RevisionLog<T> log, string contextName, string fileName) {
                return await Task.Run(() => {

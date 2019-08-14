@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using XPW.Utilities.APICallManagement;
@@ -7,6 +8,7 @@ using XPW.Utilities.Enums;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.GoogleRecaptcha {
+     [Serializable]
      public class Validation {
           public async Task<GoogleRecaptchaModel> Checker(string recaptchaResponse, string ip) {
                AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");

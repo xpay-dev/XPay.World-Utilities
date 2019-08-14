@@ -6,6 +6,7 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.Logs {
+     [Serializable]
      public static class RequestErrorLogs {
           public static string Write(RequestErrorLogModel log) {
                if (log is null) {
@@ -16,6 +17,7 @@ namespace XPW.Utilities.Logs {
                     return "Done";
                }
                string fileName = DateTime.Now.ToString("HH") + ".json";
+               string logName = DateTime.Now.ToString("HH") + ".log";
                try {
                     string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Errors" + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                     if (!Directory.Exists(FileLocation)) {
@@ -32,6 +34,14 @@ namespace XPW.Utilities.Logs {
                     }
                     if (logs.Count == 0) {
                          logs = new List<RequestErrorLogModel>();
+                    }
+                    using (StreamWriter sw = File.AppendText(FileLocation + "\\" + logName)) {
+                         sw.Write("[" + log.DateCreated + " -> " + log.Id + "]");
+                         sw.Write(" Action : " + log.ErrorCode + "]");
+                         sw.Write(" ErrorCode : " + log.ErrorType + "]");
+                         sw.Write(" Message : " + log.Message + "]");
+                         sw.Write(" SourceFile : " + log.URLPath + "]");
+                         sw.WriteLine("\n");
                     }
                     logs.Add(log);
                     return Writer<RequestErrorLogModel>.JsonWriterList(logs, FileLocation + "\\" + fileName);

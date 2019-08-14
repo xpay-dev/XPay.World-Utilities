@@ -12,6 +12,7 @@ using XPW.Utilities.AppConfigManagement;
 using XPW.Utilities.CryptoHashingManagement;
 
 namespace XPW.Utilities.HeaderValidations {
+     [Serializable]
      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
      public class Authorization : AuthorizationFilterAttribute {
           internal static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");

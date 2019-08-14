@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace XPW.Utilities.UtilityModels {
+     [Serializable]
      public class IPWhiteListingModel {
           public string CompanyName { get; set; }
           public string IPAddress { get; set; }

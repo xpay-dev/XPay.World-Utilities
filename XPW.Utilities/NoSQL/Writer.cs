@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace XPW.Utilities.NoSQL {
+     [Serializable]
      public class Writer<T> where T : class, new() {
           public static string JsonWriter(T entity, string path) {
                try {

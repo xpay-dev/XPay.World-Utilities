@@ -2,6 +2,7 @@
 using XPW.Utilities.Enums;
 
 namespace XPW.Utilities.UtilityModels {
+     [Serializable]
      public class ErrorLogsModel {
           public ErrorLogsModel() {
                Id = Guid.NewGuid();

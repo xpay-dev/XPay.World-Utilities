@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace XPW.Utilities.NoSQL {
+     [Serializable]
      public class Reader<T> where T : class, new() {
           public static List<T> JsonReaderList(string file) {
                try {

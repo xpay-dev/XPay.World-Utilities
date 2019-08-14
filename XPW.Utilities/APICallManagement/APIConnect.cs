@@ -10,6 +10,7 @@ using XPW.Utilities.Enums;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.APICallManagement {
+     [Serializable]
      public class APIConnect<T> where T : class, new() {
           private APIRequestMethod APICallMethod { get; } = APIRequestMethod.None;
           public APIConnect(APIRequestMethod method) { APICallMethod = method; }
@@ -180,6 +181,7 @@ namespace XPW.Utilities.APICallManagement {
                }
           }
      }
+     [Serializable]
      public class APIConnect {
           private APIRequestMethod APICallMethod { get; } = APIRequestMethod.None;
           public APIConnect(APIRequestMethod method) { APICallMethod = method; }

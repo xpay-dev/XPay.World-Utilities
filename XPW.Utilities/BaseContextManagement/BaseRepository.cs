@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace XPW.Utilities.BaseContext {
+     [Serializable]
      public abstract class BaseRepository<C, T> : IBaseRepository<T>, IDisposable
         where C : DbContext, new()
         where T : class, new() {

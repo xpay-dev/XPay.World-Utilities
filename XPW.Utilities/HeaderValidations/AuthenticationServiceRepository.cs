@@ -9,14 +9,15 @@ using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.HeaderValidations {
-     public class BaseAuthenticationServiceRepository {
+     [Serializable]
+     public class AuthenticationServiceRepository {
 #pragma warning disable IDE0044 // Add readonly modifier
           private string FileName;
 #pragma warning restore IDE0044 // Add readonly modifier
 #pragma warning disable IDE0044 // Add readonly modifier
           private string FileLocation;
 #pragma warning restore IDE0044 // Add readonly modifier
-          public BaseAuthenticationServiceRepository() {
+          public AuthenticationServiceRepository() {
                string FileLocation = HostingEnvironment.ApplicationPhysicalPath + "App_Authentications";
                string FileName = new BaseAuthenticationModel().GetType().Name + ".json";
                if (!Directory.Exists(FileLocation)) {
