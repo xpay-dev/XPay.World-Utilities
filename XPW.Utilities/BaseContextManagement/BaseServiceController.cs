@@ -13,7 +13,6 @@ using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
 namespace XPW.Utilities.BaseContextManagement {
-     [Serializable]
      public abstract class BaseServiceController<S> : ApiController, IDisposable
           where S : class, new() {
           private readonly S BaseService = Activator.CreateInstance<S>();
@@ -24,7 +23,6 @@ namespace XPW.Utilities.BaseContextManagement {
           public string ErrorMessage = string.Empty;
           public List<string> ErrorDetails = new List<string>();
      }
-     [Serializable]
      public abstract class BaseServiceController : ApiController, IDisposable {
           public new virtual void Dispose() => base.Dispose();
           public static readonly string key = ConfigurationManager.AppSettings["DefaultKey"].ToString();
@@ -33,7 +31,6 @@ namespace XPW.Utilities.BaseContextManagement {
           public string ErrorMessage = string.Empty;
           public List<string> ErrorDetails = new List<string>();
      }
-     [Serializable]
      public abstract class BaseServiceController<E, C> : ApiController, IDisposable
           where E : class, new()
           where C : DbContext, new() {
