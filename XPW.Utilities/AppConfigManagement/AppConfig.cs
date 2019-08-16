@@ -31,14 +31,16 @@ namespace XPW.Utilities.AppConfigManagement {
                          appConfigSettings = new List<AppConfigSettingsModel>();
                     }
                     StringValueChecker(key);
-                    if (autoCreate) {
-                         value.Name = key;
-                         appConfigSettings.Add(value);
-                         _ = Writer<AppConfigSettingsModel>.JsonWriterList(appConfigSettings, FileLocation + "\\" + FileName);
-                    }
                     AppConfigSettingsModel appSetting = appConfigSettings.Where(a => a.Name.Equals(key, StringComparison.CurrentCulture)).FirstOrDefault();
                     if (appSetting == null) {
-                         throw new Exception("No Application Settings Found");
+                         if (autoCreate) {
+                              value.Name = key;
+                              appConfigSettings.Add(value);
+                              _ = Writer<AppConfigSettingsModel>.JsonWriterList(appConfigSettings, FileLocation + "\\" + FileName);
+                              appSetting = value;
+                         } else {
+                              throw new Exception("No Application Settings Found");
+                         }
                     }
                     return (TValue)Convert.ChangeType(appSetting.Value, typeof(TValue));
                } catch (Exception ex) {

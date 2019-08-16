@@ -53,12 +53,12 @@ namespace XPW.Utilities.BaseContextManagement {
                          ErrorCode = "800.1";
                          data      = Service.GetAll().ToList();
                     } catch (Exception ex) {
-                         string message           = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
-                         ErrorDetails.Add(message);
-                         ErrorMessage             = message;
                          MethodBase methodBase    = MethodBase.GetCurrentMethod();
                          StackTrace trace         = new StackTrace(ex, true);
                          string sourceFile        = trace.GetFrame(0).GetFileName();
+                         string message           = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
+                         ErrorDetails.Add(message);
+                         ErrorMessage             = message;
                          ErrorLogs.Write(new ErrorLogsModel {
                               Application         = Assembly.GetExecutingAssembly().GetName().Name,
                               Controller          = GetType().Name,

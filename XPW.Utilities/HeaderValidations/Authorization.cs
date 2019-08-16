@@ -90,7 +90,7 @@ namespace XPW.Utilities.HeaderValidations {
                public AuthorizationFilter(bool active) : base(active) { }
                internal new static readonly AppConfig appConfigManager = new AppConfig(HostingEnvironment.ApplicationPhysicalPath + "App_Settings", "appConfig.json");
                private static string authUsername = appConfigManager.AppSetting<string>("APIAuthorizationUsername", true, new UtilityModels.AppConfigSettingsModel{ Value = "AuthAccess", Group = "Security" });
-               private static string authPassword = appConfigManager.AppSetting<string>("APIAuthorizationPassword", true, new UtilityModels.AppConfigSettingsModel { Value = new HashUtilityManagement().EncodingToBase64("patCHES214#"), Group = "Security" });
+               private static string authPassword = appConfigManager.AppSetting<string>("APIAuthorizationPassword", true, new UtilityModels.AppConfigSettingsModel{ Value = new HashUtilityManagement().EncodingToBase64("patCHES214#"), Group = "Security" });
 
                protected override bool OnAuthorizeUser(string username, string password, HttpActionContext actionContext) {
                     if (string.IsNullOrEmpty(username)) {
