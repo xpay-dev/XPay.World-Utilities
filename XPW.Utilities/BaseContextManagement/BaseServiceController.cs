@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using XPW.Utilities.BaseContext;
 using XPW.Utilities.CryptoHashingManagement;
+using XPW.Utilities.Functions;
 using XPW.Utilities.Logs;
 using XPW.Utilities.UtilityModels;
 
@@ -44,14 +44,20 @@ namespace XPW.Utilities.BaseContextManagement {
           public string ErrorCode = string.Empty;
           public string ErrorMessage = string.Empty;
           public List<string> ErrorDetails = new List<string>();
+          public List<StoredProcedureParam> spParams = new List<StoredProcedureParam>();
           [Route("get-all")]
           [HttpGet]
           public virtual async Task<GenericResponseListModel<E>> GetAll() {
-               return await Task.Run(() => {
+               return await Task.Run(async () => {
                     var data = new List<E>();
                     try {
                          ErrorCode = "800.1";
-                         data      = Service.GetAll().ToList();
+                         string entityName = new E().GetType().Name;
+                         spParams.Add(new StoredProcedureParam {
+                              Param = "TableName",
+                              Value = Pluralized.Pluralize(new E().GetType().Name)
+                         });
+                         data = await Service.StoredProcedureList("spGetAll", spParams);
                     } catch (Exception ex) {
                          MethodBase methodBase    = MethodBase.GetCurrentMethod();
                          StackTrace trace         = new StackTrace(ex, true);
@@ -59,7 +65,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          string message           = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
                          ErrorDetails.Add(message);
                          ErrorMessage             = message;
-                         ErrorLogs.Write(new ErrorLogsModel {
+                         await ErrorLogs.Write(new ErrorLogsModel {
                               Application         = Assembly.GetExecutingAssembly().GetName().Name,
                               Controller          = GetType().Name,
                               CurrentAction       = methodBase.Name.Split('>')[0].TrimStart('<'),
@@ -93,16 +99,31 @@ namespace XPW.Utilities.BaseContextManagement {
                          if (!Guid.TryParse(id, out Guid guidId) && !int.TryParse(id, out int intId)) {
                               id = crypto.Decrypt((id.Contains(" ") ? id.Replace(" ", "+") : id));
                          }
+                         string entityName = new E().GetType().Name;
+                         spParams.Add(new StoredProcedureParam {
+                              Param = "TableName",
+                              Value = Pluralized.Pluralize(new E().GetType().Name)
+                         });
+                         spParams.Add(new StoredProcedureParam {
+                              Param = "Id",
+                              Value = id.ToString()
+                         });
+                         var dataType = string.Empty;
                          var isGuid = Guid.TryParse(id, out guidId);
                          var isNumeric = int.TryParse(id, out intId);
                          if (isGuid) {
-                              data = await Service.Get(guidId);
+                              dataType = "uniqueidentifier".ToUpper();
                          } else if (isNumeric) {
-                              data = await Service.Get(intId);
+                              dataType = "int".ToUpper();
                          } else {
                               ErrorCode = "800.21";
                               throw new Exception("Invalid data reference.");
                          }
+                         spParams.Add(new StoredProcedureParam {
+                              Param = "Type",
+                              Value = dataType
+                         });
+                         data = await Service.StoredProcedure("spGetAll", spParams);
                     } catch (Exception ex) {
                          string message           = ex.Message + (!string.IsNullOrEmpty(ex.InnerException.Message) && ex.Message != ex.InnerException.Message ? " Reason : " + ex.InnerException.Message : string.Empty);
                          ErrorDetails.Add(message);
@@ -110,7 +131,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          MethodBase methodBase    = MethodBase.GetCurrentMethod();
                          StackTrace trace         = new StackTrace(ex, true);
                          string sourceFile        = trace.GetFrame(0).GetFileName();
-                         ErrorLogs.Write(new ErrorLogsModel {
+                         await ErrorLogs.Write(new ErrorLogsModel {
                               Application         = Assembly.GetExecutingAssembly().GetName().Name,
                               Controller          = GetType().Name,
                               CurrentAction       = methodBase.Name.Split('>')[0].TrimStart('<'),
@@ -172,7 +193,7 @@ namespace XPW.Utilities.BaseContextManagement {
                          MethodBase methodBase    = MethodBase.GetCurrentMethod();
                          StackTrace trace         = new StackTrace(ex, true);
                          string sourceFile        = trace.GetFrame(0).GetFileName();
-                         ErrorLogs.Write(new ErrorLogsModel {
+                         await ErrorLogs.Write(new ErrorLogsModel {
                               Application         = Assembly.GetExecutingAssembly().GetName().Name,
                               Controller          = GetType().Name,
                               CurrentAction       = methodBase.Name.Split('>')[0].TrimStart('<'),

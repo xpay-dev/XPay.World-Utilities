@@ -58,6 +58,7 @@
     <Compile Include="Filtering\RequestFiltering.cs" />
     <Compile Include="Functions\Checker.cs" />
     <Compile Include="Functions\Generator.cs" />
+    <Compile Include="Functions\Pluralize.cs" />
     <Compile Include="GoogleRecaptcha\Validation.cs" />
     <Compile Include="HeaderValidations\Authentication.cs" />
     <Compile Include="HeaderValidations\Authorization.cs" />

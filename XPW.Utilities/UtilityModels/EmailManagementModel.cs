@@ -24,12 +24,16 @@ namespace XPW.Utilities.UtilityModels {
      }
      [Serializable]
      public class EmailManagementConfigurationProperties {
+          public EmailManagementConfigurationProperties() {
+               TimeOut = 90000;
+          }
           public string From { get; set; }
           public string Port { get; set; }
           public string Host { get; set; }
           public string User { get; set; }
           public string Password { get; set; }
           public bool SSL { get; set; }
+          public int TimeOut { get; set; }
      }
 
 }

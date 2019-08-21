@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Web.Hosting;
@@ -10,13 +11,19 @@ namespace XPW.Utilities.EmailManagement {
      [Serializable]
      public class EmailSending {
           internal static List<EmailManagementConfiguration> emainConfigurations = new List<EmailManagementConfiguration>();
-          internal static string configName = string.Empty;
-          public EmailSending(string name = "Default") {
-               emainConfigurations = Reader<EmailManagementConfiguration>.JsonReaderList(HostingEnvironment.ApplicationPhysicalPath + "App_Settings\\emailConfigurations.json");
-               configName = name;
-          }
-          public void SendEmail(EmailManagementodel email) {
+          internal static string defaultEmailConfigFolder   = HostingEnvironment.ApplicationPhysicalPath + "App_Settings";
+          public void SendEmail(EmailManagementodel email, string emailConfigName, string configName) { 
                try {
+                    if (!Directory.Exists(defaultEmailConfigFolder)) {
+                         Directory.CreateDirectory(defaultEmailConfigFolder);
+                    }
+                    emailConfigName = defaultEmailConfigFolder + "\\" + emailConfigName + ".json";
+                    if (!File.Exists(emailConfigName)) {
+                         FileStream file = File.Create(emailConfigName);
+                         file.Close();
+                         file.Dispose();
+                    }
+                    emainConfigurations = Reader<EmailManagementConfiguration>.JsonReaderList(emailConfigName);
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.AlternateViews.Add(email.EmailContent);
                     EmailManagementConfiguration emailConfig = GetEmailConfiguration(configName);
@@ -47,22 +54,22 @@ namespace XPW.Utilities.EmailManagement {
                               });
                          }
                     }
-                    mailMessage.Subject = email.Subject;
-                    SmtpClient client = new SmtpClient();
-                    client.EnableSsl = emailConfig.Properties.SSL;
-                    client.Port = Convert.ToInt32(emailConfig.Properties.Port);
-                    client.Host = emailConfig.Properties.Host;
-                    client.Timeout = 90000;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = new System.Net.NetworkCredential(emailConfig.Properties.User, emailConfig.Properties.Password);
+                    mailMessage.Subject           = email.Subject;
+                    SmtpClient client             = new SmtpClient();
+                    client.EnableSsl              = emailConfig.Properties.SSL;
+                    client.Port                   = Convert.ToInt32(emailConfig.Properties.Port);
+                    client.Host                   = emailConfig.Properties.Host;
+                    client.Timeout                = emailConfig.Properties.TimeOut;
+                    client.DeliveryMethod         = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials  = false;
+                    client.Credentials            = new System.Net.NetworkCredential(emailConfig.Properties.User, emailConfig.Properties.Password);
                     client.Send(mailMessage);
                } catch (Exception ex) {
                     throw ex;
                }
           }
           public EmailManagementConfiguration GetEmailConfiguration(string config) {
-               return emainConfigurations.Where(a => a.Name.Equals(config, StringComparison.CurrentCulture)).FirstOrDefault();
+               return (emainConfigurations == null ? null : emainConfigurations.Count == 0 ? null : emainConfigurations.Where(a => a.Name.Equals(config, StringComparison.CurrentCulture)).FirstOrDefault());
           }
      }
 }

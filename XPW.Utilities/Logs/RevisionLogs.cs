@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using XPW.Utilities.NoSQL;
 using XPW.Utilities.UtilityModels;
@@ -9,23 +10,23 @@ using XPW.Utilities.UtilityModels;
 namespace XPW.Utilities.Logs {
      [Serializable]
      public static class RevisionLogs<T> where T : class, new() {
-          public static async Task<string> Write(RevisionLog<T> log, string contextName, string fileName) {
-               return await Task.Run(() => {
+          public static async Task Write(RevisionLog<T> log, string contextName, string fileName, T entity) {
+               await Task.Run(() => {
                     if (log is null) {
-                         return "Done";
+                         return;
                     }
                     if (string.IsNullOrEmpty(contextName)) {
-                         return "Done";
+                         return;
                     }
                     if (string.IsNullOrEmpty(fileName)) {
-                         return "Done";
+                         return;
                     }
                     bool saveRevision = Convert.ToBoolean(ConfigurationManager.AppSettings["SaveRevision"] == null ? "false" : ConfigurationManager.AppSettings["SaveRevision"].ToString());
                     if (!saveRevision) {
-                         return "Done";
+                         return;
                     }
                     try {
-                         string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revisions" + "\\" + contextName;
+                         string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revisions" + "\\" + contextName + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                          if (!Directory.Exists(FileLocation)) {
                               Directory.CreateDirectory(FileLocation);
                          }
@@ -34,15 +35,26 @@ namespace XPW.Utilities.Logs {
                               file.Close();
                               file.Dispose();
                          }
-                         List<RevisionLog<T>> logs = Reader<RevisionLog<T>>.JsonReaderList(FileLocation + "\\" + fileName);
-                         if (logs == null) {
-                              logs = new List<RevisionLog<T>>();
+                         PropertyInfo[] properties = typeof(T).GetProperties();
+                         using (StreamWriter sw = File.AppendText(FileLocation + "\\" + fileName)) {
+                              string toWrite = string.Empty;
+                              sw.Write("{ ");
+                              toWrite += "\"Context     \" : " + (log.Context == null ? "null" + "," : "\"" + log.Context.ToString() + "\",") + "\t";
+                              toWrite += "\"Entity      \" : " + (log.Entity == null ? "null" + "," : "\"" + log.Entity.ToString() + "\",") + "\t";
+                              toWrite += "\"RevisionType\" : " +"\"" + log.RevisionType.ToString() + "\"," + "\t";
+                              toWrite += "\"DateCreated \" : " + (log.DateCreated == null ? "null" + "," : "\"" + log.DateCreated.ToString() + "\",") + "\t";
+                              toWrite += "\"Revisions   \" : ";
+                              toWrite += "{ ";
+                              foreach (PropertyInfo property in properties) {
+                                   toWrite += "\"" + property.Name + "\" : " + (property.GetValue(entity, null) == null ? "null" + "," : "\"" + property.GetValue(entity, null).ToString() + "\",") + "\t";
+                              }
+                              toWrite = toWrite.Trim().TrimEnd(',');
+                              toWrite += "}";
+                              toWrite = toWrite.Trim().TrimEnd(',');
+                              sw.Write(toWrite);
+                              sw.Write("}");
+                              sw.WriteLine("\n");
                          }
-                         if (logs.Count == 0) {
-                              logs = new List<RevisionLog<T>>();
-                         }
-                         logs.Add(log);
-                         return Writer<RevisionLog<T>>.JsonWriterList(logs, FileLocation + "\\" + fileName);
                     } catch (Exception ex) {
                          throw ex;
                     }
@@ -61,7 +73,7 @@ namespace XPW.Utilities.Logs {
                          return new List<RevisionLog<T>>();
                     }
                     try {
-                         string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revisions" + "\\" + contextName;
+                         string FileLocation = ConfigurationManager.AppSettings["LogLocation"].ToString() + "\\" + "Revisions" + "\\" + contextName + "\\" + DateTime.Now.ToString("MM-dd-yyyy");
                          if (!Directory.Exists(FileLocation)) {
                               Directory.CreateDirectory(FileLocation);
                          }

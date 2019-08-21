@@ -350,9 +350,10 @@ namespace XPW.Utilities.BaseContext {
                          string sqlCommand = string.Format("exec {0}", storedProcName);
                          List<SqlParameter> storedProcParams = new List<SqlParameter>();
                          parameters.ForEach(a => {
-                              sqlCommand = string.Format("{0} @{1}", sqlCommand, a.Param);
+                              sqlCommand = string.Format("{0} @{1}{2}", sqlCommand, a.Param, (parameters.Count > 1 ? ", " : string.Empty));
                               storedProcParams.Add(new SqlParameter("@" + a.Param, a.Value));
                          });
+                         sqlCommand = sqlCommand.Trim().TrimEnd(',');
                          result = Context.Database.SqlQuery<T>(sqlCommand, storedProcParams.ToArray()).ToList().FirstOrDefault();
                     });
                     if (!task.Wait(TimeSpan)) {
@@ -370,9 +371,10 @@ namespace XPW.Utilities.BaseContext {
                          string sqlCommand = string.Format("exec {0}", storedProcName);
                          List<SqlParameter> storedProcParams = new List<SqlParameter>();
                          parameters.ForEach(a => {
-                              sqlCommand = string.Format("{0} @{1}", sqlCommand, a.Param);
+                              sqlCommand = string.Format("{0} @{1}{2}", sqlCommand, a.Param, (parameters.Count > 1 ? ", " : string.Empty));
                               storedProcParams.Add(new SqlParameter("@" + a.Param, a.Value));
                          });
+                         sqlCommand = sqlCommand.Trim().TrimEnd(',');
                          results = Context.Database.SqlQuery<T>(sqlCommand, storedProcParams.ToArray()).ToList();
                     });
                     if (!task.Wait(TimeSpan)) {
