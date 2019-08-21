@@ -49,7 +49,6 @@ namespace XPW.Utilities.Functions {
                string orderId = DateTime.Now.ToString("yyyyMMddhhmmss") + Convert.ToString(value);
                return orderId;
           }
-
           public static string GenerateVerificationNumber(int lenght = 1) {
                Random random = new Random();
                StringBuilder sb = new StringBuilder();
@@ -73,6 +72,25 @@ namespace XPW.Utilities.Functions {
                     }
                     Random rnd = new Random();
                     string possibleChar = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789!@#$^*()<>{}[]|";
+                    int randNum;
+                    StringBuilder builder = new StringBuilder();
+                    for (var i = 1; i <= lenght; i++) {
+                         randNum = rnd.Next(1, possibleChar.Length);
+                         string ch = possibleChar.Substring(System.Convert.ToInt32(randNum), 1);
+                         builder.Append(ch);
+                    }
+                    return builder.ToString();
+               } catch (Exception ex) {
+                    throw ex;
+               }
+          }
+          public static string NumberGenerator(int lenght = 6) {
+               try {
+                    if (lenght < 6) {
+                         throw new Exception("Invalid String Length");
+                    }
+                    Random rnd = new Random();
+                    string possibleChar = "0123456789";
                     int randNum;
                     StringBuilder builder = new StringBuilder();
                     for (var i = 1; i <= lenght; i++) {

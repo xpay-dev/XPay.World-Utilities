@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Security.AccessControl;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace XPW.Utilities.Functions {
@@ -44,6 +45,15 @@ namespace XPW.Utilities.Functions {
                } catch (PrivilegeNotHeldException) {
                     return false;
                }
+          }
+          public static string NumberExtractor(string toExtract) {
+               string splitPattern = @"[^\d]";
+               string[] results = Regex.Split(toExtract, splitPattern);
+               StringBuilder sb = new StringBuilder();
+               foreach (string s in results) {
+                    sb.Append(s);
+               }
+              return sb.ToString();
           }
      }
 }
